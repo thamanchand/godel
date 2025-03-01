@@ -304,29 +304,33 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   };
 
   return (
-    <div className={styles.routeForm}>
-      <h2>Shortest Path Navigation</h2>
+    <div className={styles.formContainer}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <h3>Plan Your Route</h3>
+        <p className={styles.optimizationNote}>
+          Routes will be automatically optimized to find the shortest path from your starting point
+          through all intermediate points to your destination, regardless of the order you enter
+          them.
+        </p>
 
-      {formError && <div className={styles.errorMessage}>{formError}</div>}
-
-      <form onSubmit={handleSubmit}>
-        <div className={styles.formGroup}>
-          <label htmlFor="source-input">Starting Point:</label>
+        {/* Source input */}
+        <div className={styles.inputGroup}>
+          <label htmlFor="source">Starting Point</label>
           <input
-            id="source-input"
-            ref={sourceInputRef}
+            id="source"
             type="text"
             value={source}
             onChange={(e) => setSource(e.target.value)}
             placeholder="Enter starting location"
-            disabled={isCalculating}
+            ref={sourceInputRef}
+            required
           />
         </div>
 
         {intermediatePoints.map((point, index) => (
           <div key={index} className={styles.formGroup}>
             <label htmlFor={`intermediate-${index}`}>Via Point {index + 1}:</label>
-            <div className={styles.inputWithButton}>
+            <div className={styles.formGroup}>
               <input
                 id={`intermediate-${index}`}
                 ref={setIntermediateInputRef(index)}

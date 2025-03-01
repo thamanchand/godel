@@ -410,7 +410,202 @@ function validateCoordinates(coords: [number, number]): [number, number] {
   return [lat, lon];
 }
 
-// Calculate the shortest path between multiple points
+// Helper function to calculate the Haversine distance between two points
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Radius of the earth in km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return distance;
+}
+
+function deg2rad(deg: number): number {
+  return deg * (Math.PI / 180);
+}
+
+// New function to find the optimal order of points for the shortest path
+async function findOptimalRouteOrder(
+  sourcePoint: RoutePoint,
+  intermediatePoints: RoutePoint[],
+  destinationPoint: RoutePoint
+): Promise<RoutePoint[]> {
+  // If there are no or just one intermediate point, no optimization needed
+  if (intermediatePoints.length <= 1) {
+    return [sourcePoint, ...intermediatePoints, destinationPoint];
+  }
+
+  // Create a distance matrix between all intermediate points
+  const n = intermediatePoints.length;
+  const distanceMatrix: number[][] = [];
+
+  for (let i = 0; i < n; i++) {
+    distanceMatrix[i] = [];
+    for (let j = 0; j < n; j++) {
+      if (i === j) {
+        distanceMatrix[i][j] = 0;
+      } else {
+        const pointA = intermediatePoints[i];
+        const pointB = intermediatePoints[j];
+        distanceMatrix[i][j] = calculateDistance(pointA.lat, pointA.lon, pointB.lat, pointB.lon);
+      }
+    }
+  }
+
+  // Calculate distances from source to each intermediate point
+  const sourceDistances: number[] = intermediatePoints.map((point) =>
+    calculateDistance(sourcePoint.lat, sourcePoint.lon, point.lat, point.lon)
+  );
+
+  // Calculate distances from each intermediate point to destination
+  const destDistances: number[] = intermediatePoints.map((point) =>
+    calculateDistance(point.lat, point.lon, destinationPoint.lat, destinationPoint.lon)
+  );
+
+  // For small number of points, we can use a simple approach: try all permutations
+  // This works well for up to ~10 points, which is reasonable for a navigation app
+  // For larger problems, we would need a more sophisticated algorithm like genetic algorithm or simulated annealing
+
+  // Generate all permutations of intermediate points indices
+  const indices = Array.from({ length: n }, (_, i) => i);
+  const permutations = generatePermutations(
+    indices,
+    distanceMatrix,
+    sourceDistances,
+    destDistances
+  );
+
+  let bestPermutation: number[] = [];
+  let shortestDistance = Infinity;
+
+  // Evaluate each permutation
+  for (const perm of permutations) {
+    let totalDistance = sourceDistances[perm[0]]; // Distance from source to first point
+
+    // Add distances between intermediate points
+    for (let i = 0; i < perm.length - 1; i++) {
+      totalDistance += distanceMatrix[perm[i]][perm[i + 1]];
+    }
+
+    // Add distance from last intermediate point to destination
+    totalDistance += destDistances[perm[perm.length - 1]];
+
+    // Update if this is the best route found so far
+    if (totalDistance < shortestDistance) {
+      shortestDistance = totalDistance;
+      bestPermutation = [...perm];
+    }
+  }
+
+  // Construct the optimal route
+  const optimalRoute = [sourcePoint];
+  for (const idx of bestPermutation) {
+    optimalRoute.push(intermediatePoints[idx]);
+  }
+  optimalRoute.push(destinationPoint);
+
+  return optimalRoute;
+}
+
+// Helper function to generate all permutations of an array
+function generatePermutations(
+  arr: number[],
+  distanceMatrix: number[][],
+  sourceDistances: number[],
+  destDistances: number[]
+): number[][] {
+  const result: number[][] = [];
+
+  // For larger sets, limit the number of permutations to avoid performance issues
+  if (arr.length > 8) {
+    console.warn(
+      'Too many intermediate points for exact solution, using nearest neighbor heuristic'
+    );
+    return [nearestNeighborTSP(arr, distanceMatrix, sourceDistances, destDistances)];
+  }
+
+  const permute = (arr: number[], m: number[] = []) => {
+    if (arr.length === 0) {
+      result.push(m);
+    } else {
+      for (let i = 0; i < arr.length; i++) {
+        const curr = arr.slice();
+        const next = curr.splice(i, 1);
+        permute(curr, m.concat(next));
+      }
+    }
+  };
+
+  permute(arr);
+  return result;
+}
+
+// Nearest neighbor heuristic for TSP (for when we have too many points)
+function nearestNeighborTSP(
+  indices: number[],
+  distanceMatrix: number[][],
+  sourceDistances: number[],
+  destDistances: number[]
+): number[] {
+  if (indices.length <= 1) return indices;
+
+  // Find the best starting point (closest to source)
+  let startIdx = 0;
+  let minDistance = sourceDistances[0];
+  for (let i = 1; i < indices.length; i++) {
+    if (sourceDistances[i] < minDistance) {
+      minDistance = sourceDistances[i];
+      startIdx = i;
+    }
+  }
+
+  const result: number[] = [indices[startIdx]];
+  const remaining = indices.filter((_, i) => i !== startIdx);
+
+  while (remaining.length > 0) {
+    const last = result[result.length - 1];
+    let nearestIdx = 0;
+    let minDistance = Infinity;
+
+    for (let i = 0; i < remaining.length; i++) {
+      const distance = distanceMatrix[last][remaining[i]];
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestIdx = i;
+      }
+    }
+
+    result.push(remaining[nearestIdx]);
+    remaining.splice(nearestIdx, 1);
+  }
+
+  return result;
+}
+
+/**
+ * Calculates the shortest path from a source through intermediate points to a destination.
+ *
+ * This function implements a solution to the Traveling Salesman Problem (TSP) to find
+ * the optimal order of visiting all intermediate points. The algorithm works as follows:
+ *
+ * 1. For a small number of points (≤ 8), it uses a brute-force approach to try all possible
+ *    permutations of intermediate points and selects the one with the shortest total distance.
+ *
+ * 2. For a larger number of points (> 8), it uses the Nearest Neighbor heuristic to find
+ *    a reasonably good route in a more efficient manner.
+ *
+ * The function first geocodes all locations to get their coordinates, then calculates the
+ * optimal order, and finally computes the actual route segments between each pair of points
+ * in the optimized order.
+ *
+ * @param source - The starting location
+ * @param intermediatePoints - Array of intermediate locations to visit
+ * @param destination - The final destination
+ * @returns A Route object containing the optimized path, distance, duration, etc.
+ */
 export const calculateShortestPath = async (
   source: string,
   intermediatePoints: string[],
@@ -421,24 +616,28 @@ export const calculateShortestPath = async (
     const sourceCoords = await geocodeLocation(source);
     const destCoords = await geocodeLocation(destination);
 
-    // Create an array to hold all points
-    const routePoints: RoutePoint[] = [
-      {
-        name: source,
-        lat: sourceCoords.latitude,
-        lon: sourceCoords.longitude,
-        placeId: sourceCoords.placeId,
-      },
-    ];
+    // Create source and destination points
+    const sourcePoint: RoutePoint = {
+      name: source,
+      lat: sourceCoords.latitude,
+      lon: sourceCoords.longitude,
+      placeId: sourceCoords.placeId,
+    };
 
-    // Geocode and add intermediate points
-    const intermediateCoords: (Position & { placeId?: string })[] = [];
+    const destPoint: RoutePoint = {
+      name: destination,
+      lat: destCoords.latitude,
+      lon: destCoords.longitude,
+      placeId: destCoords.placeId,
+    };
+
+    // Geocode intermediate points
+    const intermediateRoutePoints: RoutePoint[] = [];
     for (const point of intermediatePoints) {
       if (point.trim()) {
         // Only process non-empty points
         const coords = await geocodeLocation(point);
-        intermediateCoords.push(coords);
-        routePoints.push({
+        intermediateRoutePoints.push({
           name: point,
           lat: coords.latitude,
           lon: coords.longitude,
@@ -447,23 +646,22 @@ export const calculateShortestPath = async (
       }
     }
 
-    // Add destination
-    routePoints.push({
-      name: destination,
-      lat: destCoords.latitude,
-      lon: destCoords.longitude,
-      placeId: destCoords.placeId,
-    });
+    // Find the optimal order of points
+    const optimizedRoutePoints = await findOptimalRouteOrder(
+      sourcePoint,
+      intermediateRoutePoints,
+      destPoint
+    );
 
-    // Calculate route segments between each pair of points
+    // Calculate route segments between each pair of points in the optimized order
     let totalDistance = 0;
     let totalDuration = 0;
     let fullPath: [number, number][] = [];
     const segments: RouteSegment[] = [];
 
-    for (let i = 0; i < routePoints.length - 1; i++) {
-      const pointA = routePoints[i];
-      const pointB = routePoints[i + 1];
+    for (let i = 0; i < optimizedRoutePoints.length - 1; i++) {
+      const pointA = optimizedRoutePoints[i];
+      const pointB = optimizedRoutePoints[i + 1];
 
       const segment = await getRouteSegment(
         [pointA.lat, pointA.lon],
@@ -486,7 +684,7 @@ export const calculateShortestPath = async (
     }
 
     return {
-      points: routePoints,
+      points: optimizedRoutePoints,
       segments,
       distance: Math.round(totalDistance * 10) / 10, // Round to 1 decimal place
       duration: Math.round(totalDuration),
@@ -497,20 +695,3 @@ export const calculateShortestPath = async (
     throw new Error('Failed to calculate the shortest path');
   }
 };
-
-// Helper function to calculate distance between two points using the Haversine formula
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // Radius of the Earth in km
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c; // Distance in km
-  return distance;
-}
-
-function deg2rad(deg: number): number {
-  return deg * (Math.PI / 180);
-}

@@ -248,4 +248,15 @@
 
 :global(.pac-logo:after) {
   display: none !important; /* Hide the Google logo */
+}
+
+.optimizationNote {
+  background-color: #f0f8ff; /* Light blue background */
+  border-left: 4px solid #1e90ff; /* Blue left border */
+  padding: 10px;
+  margin: 10px 0 20px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  color: #333;
+  line-height: 1.4;
 } 
