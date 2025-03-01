@@ -65,3 +65,48 @@
     white-space: nowrap;
   }
 }
+
+.busStopList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: variables.$spacing-1;
+}
+
+.listHeader {
+  padding: variables.$spacing-1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: variables.$text-primary;
+  margin: 0;
+}
+
+.listCount {
+  font-size: 14px;
+  color: variables.$text-secondary;
+  background-color: variables.$gray-100;
+  padding: 4px 8px;
+  border-radius: 16px;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 20px;
+  color: variables.$text-secondary;
+  font-size: 16px;
+}
+
+.listItem {
+  padding: variables.$spacing-1 variables.$spacing-2;
+  border-bottom: 1px solid rgba(variables.$gray-900, 0.1);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}

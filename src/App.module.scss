@@ -5,32 +5,36 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  background-color: variables.$bg-light;
 }
 
 .header {
-  padding: variables.$spacing-sm;
-  background-color: white;
-  border-bottom: 1px solid variables.$light-gray;
+  padding: variables.$spacing-4 variables.$spacing-6;
+  background-color: variables.$bg-white;
+  border-bottom: 1px solid variables.$border-light;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: variables.$spacing-md;
-  min-height: 32px;
-  
+  box-shadow: variables.$shadow-sm;
+  position: relative;
+  z-index: 10;
 
   h2 {
     color: variables.$text-primary;
-    font-size: variables.$text-2xl;
-    font-weight: variables.$font-bold;
-    white-space: nowrap;
+    font-size: variables.$font-size-xl;
+    font-weight: variables.$font-weight-semibold;
     margin: 0;
+    
+    // Add a subtle gradient effect to the logo
+    background: linear-gradient(90deg, variables.$primary, variables.$primary-dark);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
   }
 
   @media (max-width: variables.$breakpoint-md) {
-    flex-direction: column;
-    align-items: stretch;
-    gap: variables.$spacing-sm;
+    padding: variables.$spacing-4;
   }
 }
 
@@ -48,7 +52,7 @@
 
 .controls {
   display: flex;
-  gap: variables.$spacing-sm;
+  gap: variables.$spacing-2;
   flex: 1;
   max-width: 800px;
 
@@ -60,22 +64,22 @@
 .searchInput {
   flex: 1;
   height: 36px;
-  padding: 0 variables.$spacing-sm;
-  border: 1px solid rgba(variables.$dark, 0.1);
-  border-radius: variables.$border-radius-sm;
+  padding: 0 variables.$spacing-2;
+  border: 1px solid rgba(variables.$gray-900, 0.1);
+  border-radius: variables.$radius-sm;
   font-size: 15px;
   font-weight: 400;
 
   &:focus {
-    border-color: variables.$blue;
+    border-color: variables.$primary;
   }
 }
 
 .filterSelect {
   height: 36px;
-  padding: 0 32px 0 variables.$spacing-sm;
-  border: 1px solid rgba(variables.$dark, 0.1);
-  border-radius: variables.$border-radius-sm;
+  padding: 0 32px 0 variables.$spacing-2;
+  border: 1px solid rgba(variables.$gray-900, 0.1);
+  border-radius: variables.$radius-sm;
   font-size: 14px;
   color: variables.$text-primary;
   background-color: white;
@@ -86,17 +90,17 @@
   background-position: right 12px center;
 
   &:focus {
-    border-color: variables.$blue;
+    border-color: variables.$primary;
   }
 }
 
 .main {
   flex: 1;
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: variables.$spacing-md;
-  padding: variables.$spacing-md;
-  height: calc(100vh - 72px);
+  grid-template-columns: 420px 1fr;
+  gap: variables.$spacing-6;
+  padding: variables.$spacing-6;
+  height: calc(100vh - 70px);
   overflow: hidden;
   max-width: 100vw;
 
@@ -104,23 +108,19 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
     height: auto;
-    min-height: calc(100vh - 72px);
+    min-height: calc(100vh - 70px);
     overflow: auto;
-    padding: variables.$spacing-sm;
-    gap: variables.$spacing-sm;
-  }
-  
-  @media (max-height: 800px) {
-    height: auto;
-    min-height: calc(100vh - 72px);
+    padding: variables.$spacing-4;
+    gap: variables.$spacing-4;
   }
 }
 
 .mapContainer {
   height: 100%;
   overflow: hidden;
-  border-radius: variables.$border-radius-md;
-  border: 1px solid rgba(variables.$dark, 0.1);
+  border-radius: variables.$radius-lg;
+  border: 1px solid variables.$border-light;
+  box-shadow: variables.$shadow-md;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -128,7 +128,7 @@
   @media (max-width: variables.$breakpoint-md) {
     height: 500px;
     min-height: 500px;
-    margin-bottom: variables.$spacing-md;
+    margin-bottom: variables.$spacing-6;
   }
   
   @media (max-width: 480px) {
@@ -138,15 +138,20 @@
 }
 
 .error {
-  color: variables.$error-color;
-  font-size: variables.$text-base;
-  margin-bottom: variables.$spacing-sm;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: variables.$spacing-3 variables.$spacing-4;
+  border-radius: variables.$radius-md;
+  margin-bottom: variables.$spacing-4;
+  font-size: variables.$font-size-sm;
+  border-left: 4px solid #ef4444;
+  grid-column: 1 / -1;
 }
 
 .filterGroup {
   display: flex;
   align-items: center;
-  gap: variables.$spacing-xs;
+  gap: variables.$spacing-1;
 }
 
 .filterLabel {
@@ -157,5 +162,94 @@
 }
 
 .results {
+  height: 100%;
+}
+
+// Responsive adjustments
+@media (max-width: 1200px) {
+  .main {
+    grid-template-columns: 380px 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main {
+    grid-template-columns: 340px 1fr;
+  }
+}
+
+// Animation for loading states
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.loading {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+// Utility classes
+.flexRow {
+  display: flex;
+  align-items: center;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.gap1 {
+  gap: variables.$spacing-1;
+}
+
+.gap2 {
+  gap: variables.$spacing-2;
+}
+
+.gap4 {
+  gap: variables.$spacing-4;
+}
+
+.mt4 {
+  margin-top: variables.$spacing-4;
+}
+
+.mb4 {
+  margin-bottom: variables.$spacing-4;
+}
+
+.p4 {
+  padding: variables.$spacing-4;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.textRight {
+  text-align: right;
+}
+
+.textMuted {
+  color: variables.$text-muted;
+}
+
+.textSmall {
+  font-size: variables.$font-size-sm;
+}
+
+.card {
+  background-color: variables.$bg-white;
+  border-radius: variables.$radius-lg;
+  box-shadow: variables.$shadow-md;
+  padding: variables.$spacing-6;
   height: 100%;
 }

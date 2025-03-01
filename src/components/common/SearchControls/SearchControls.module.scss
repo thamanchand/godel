@@ -1,34 +1,39 @@
 @use "../../../styles/variables" as variables;
 
-.controls {
+.searchControls {
   display: flex;
-  gap: variables.$spacing-sm;
-  flex: 1;
-  max-width: 800px;
-
-  @media (max-width: variables.$breakpoint-sm) {
+  gap: variables.$spacing-2;
+  width: 100%;
+  
+  @media (max-width: variables.$breakpoint-md) {
     flex-direction: column;
-    width: 100%;
+    gap: variables.$spacing-2;
   }
 }
 
 .searchInput {
   flex: 1;
-  height: 36px;
-  padding: 0 variables.$spacing-sm;
-  border: 1px solid rgba(variables.$dark, 0.1);
-  border-radius: variables.$border-radius-sm;
-  font-size: variables.$text-base;
+  height: 40px;
+  padding: 0 variables.$spacing-2;
+  border: 1px solid rgba(variables.$gray-900, 0.1);
+  border-radius: variables.$radius-sm;
+  font-size: 15px;
+  font-weight: 400;
 
   &:focus {
-    border-color: variables.$blue;
+    border-color: variables.$primary;
   }
 }
 
 .filterGroup {
   display: flex;
   align-items: center;
-  gap: variables.$spacing-xs;
+  gap: variables.$spacing-1;
+  
+  @media (max-width: variables.$breakpoint-md) {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 .filterLabel {
@@ -39,11 +44,11 @@
 }
 
 .filterSelect {
-  height: 36px;
-  padding: 0 32px 0 variables.$spacing-sm;
-  border: 1px solid rgba(variables.$dark, 0.1);
-  border-radius: variables.$border-radius-sm;
-  font-size: variables.$text-sm;
+  height: 40px;
+  padding: 0 32px 0 variables.$spacing-2;
+  border: 1px solid rgba(variables.$gray-900, 0.1);
+  border-radius: variables.$radius-sm;
+  font-size: 14px;
   color: variables.$text-primary;
   background-color: white;
   cursor: pointer;
@@ -53,6 +58,6 @@
   background-position: right 12px center;
 
   &:focus {
-    border-color: variables.$blue;
+    border-color: variables.$primary;
   }
 }

@@ -28,15 +28,22 @@ const App = () => {
       <header className={styles.header}>
         <h2>ShortPathNavigator</h2>
       </header>
+
       <main className={styles.main}>
         {error && <div className={styles.error}>{error}</div>}
-        <RouteForm onCalculateRoute={calculateRoute} isCalculating={isCalculating} />
-        <Map
-          position={mapPosition}
-          onPositionChange={setMapPosition}
-          route={route}
-          isCalculating={isCalculating}
-        />
+
+        <div className={styles.card}>
+          <RouteForm onCalculateRoute={calculateRoute} isCalculating={isCalculating} />
+        </div>
+
+        <div className={styles.mapContainer}>
+          <Map
+            position={mapPosition}
+            onPositionChange={setMapPosition}
+            route={route}
+            isCalculating={isCalculating}
+          />
+        </div>
       </main>
     </div>
   );

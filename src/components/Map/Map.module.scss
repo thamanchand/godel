@@ -4,9 +4,9 @@
   position: relative;
   height: 100%;
   width: 100%;
-  border-radius: 8px;
+  border-radius: variables.$radius-lg;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: variables.$shadow-md;
   z-index: 0; /* Ensure proper stacking context */
 }
 
@@ -16,29 +16,30 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 20px;
+  padding: variables.$spacing-6;
   text-align: center;
-  font-size: 18px;
-  color: #555;
+  font-size: variables.$font-size-lg;
+  color: variables.$text-secondary;
+  backdrop-filter: blur(4px);
 }
 
 .loadingOverlay {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   flex-direction: column;
-  gap: 20px;
+  gap: variables.$spacing-5;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(0, 0, 0, 0.05);
   border-radius: 50%;
-  border-top-color: #2196f3;
+  border-top-color: variables.$primary;
   animation: spin 1s ease-in-out infinite;
 }
 
@@ -50,45 +51,53 @@
 
 .routeSummary {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: variables.$spacing-5;
+  right: variables.$spacing-5;
   background-color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: variables.$spacing-3 variables.$spacing-4;
+  border-radius: variables.$radius-md;
+  box-shadow: variables.$shadow-lg;
   z-index: 1000;
-  max-width: 250px;
-  font-size: 14px;
+  max-width: 280px;
+  font-size: variables.$font-size-sm;
+  border-left: 4px solid variables.$primary;
 
   p {
-    margin: 5px 0;
+    margin: variables.$spacing-2 0;
+    color: variables.$text-primary;
+  }
+  
+  strong {
+    color: variables.$primary;
+    font-weight: variables.$font-weight-semibold;
   }
 }
 
 .routeLegend {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: variables.$spacing-5;
+  right: variables.$spacing-5;
   background-color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: variables.$spacing-4;
+  border-radius: variables.$radius-md;
+  box-shadow: variables.$shadow-lg;
   z-index: 1000;
-  max-width: 300px;
-  font-size: 14px;
+  max-width: 320px;
+  font-size: variables.$font-size-sm;
 
   h4 {
-    margin: 0 0 10px 0;
-    font-size: 16px;
-    color: #333;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
+    margin: 0 0 variables.$spacing-3 0;
+    font-size: variables.$font-size-base;
+    color: variables.$text-primary;
+    border-bottom: 1px solid variables.$border-light;
+    padding-bottom: variables.$spacing-2;
+    font-weight: variables.$font-weight-semibold;
   }
 
   .legendItems {
-    max-height: 200px;
+    max-height: 220px;
     overflow-y: auto;
-    padding-right: 5px;
+    padding-right: variables.$spacing-2;
     
     /* Scrollbar styling */
     &::-webkit-scrollbar {
@@ -96,17 +105,17 @@
     }
     
     &::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: variables.$gray-100;
       border-radius: 3px;
     }
     
     &::-webkit-scrollbar-thumb {
-      background: #ccc;
+      background: variables.$gray-300;
       border-radius: 3px;
     }
     
     &::-webkit-scrollbar-thumb:hover {
-      background: #aaa;
+      background: variables.$gray-400;
     }
   }
 }
@@ -114,7 +123,7 @@
 .legendItem {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: variables.$spacing-2;
   
   &:last-child {
     margin-bottom: 0;
@@ -124,31 +133,34 @@
 .colorBox {
   width: 16px;
   height: 16px;
-  border-radius: 4px;
-  margin-right: 8px;
+  border-radius: variables.$radius-sm;
+  margin-right: variables.$spacing-2;
   flex-shrink: 0;
 }
 
 .legendText {
-  font-size: 13px;
+  font-size: variables.$font-size-sm;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: variables.$text-secondary;
 }
 
 .mapInstructions {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #555;
+  bottom: variables.$spacing-5;
+  left: variables.$spacing-5;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: variables.$spacing-3 variables.$spacing-4;
+  border-radius: variables.$radius-md;
+  font-size: variables.$font-size-xs;
+  color: variables.$text-secondary;
   z-index: 1000;
   pointer-events: none;
-  transition: opacity 0.3s;
-  opacity: 0.8;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+  box-shadow: variables.$shadow-sm;
+  backdrop-filter: blur(4px);
   
   &:hover {
     opacity: 1;
@@ -176,53 +188,61 @@
 /* Style the zoom controls */
 :global(.leaflet-control-zoom) {
   border: none !important;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
-  margin: 15px !important;
+  box-shadow: variables.$shadow-md !important;
+  margin: variables.$spacing-4 !important;
   z-index: 800 !important; /* Lower z-index to prevent conflicts */
+  border-radius: variables.$radius-md !important;
+  overflow: hidden;
 }
 
 :global(.leaflet-control-zoom-in),
 :global(.leaflet-control-zoom-out) {
   background-color: white !important;
-  color: #333 !important;
-  width: 36px !important;
-  height: 36px !important;
-  line-height: 36px !important;
-  font-size: 18px !important;
+  color: variables.$text-primary !important;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  font-size: 20px !important;
+  transition: all 0.2s ease !important;
   
   &:hover {
-    background-color: #f5f5f5 !important;
-    color: #000 !important;
+    background-color: variables.$gray-100 !important;
+    color: variables.$primary !important;
   }
 }
 
 /* Style the popups */
 :global(.leaflet-popup-content-wrapper) {
-  border-radius: 8px !important;
-  padding: 5px !important;
+  border-radius: variables.$radius-md !important;
+  padding: variables.$spacing-1 !important;
+  box-shadow: variables.$shadow-md !important;
 }
 
 :global(.leaflet-popup-content) {
-  margin: 10px 12px !important;
+  margin: variables.$spacing-3 variables.$spacing-4 !important;
   line-height: 1.5 !important;
+  font-size: variables.$font-size-sm !important;
+  color: variables.$text-primary !important;
 }
 
 :global(.leaflet-popup-tip) {
   background-color: white !important;
+  box-shadow: variables.$shadow-md !important;
 }
 
 .markerIcon {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: variables.$shadow-md;
   
   img {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -236,19 +256,19 @@
     width: 30px;
     height: 30px;
     border-radius: 50% 50% 50% 0;
-    background: #c30b82;
     position: absolute;
     transform: rotate(-45deg);
     left: 50%;
     top: 50%;
     margin: -15px 0 0 -15px;
+    box-shadow: variables.$shadow-md;
     
     &::after {
       content: '';
       width: 24px;
       height: 24px;
       margin: 3px 0 0 3px;
-      background: #fff;
+      background: white;
       position: absolute;
       border-radius: 50%;
     }
@@ -257,37 +277,19 @@
 
 .sourceMarker {
   :global(.marker-pin) {
-    background: #4caf50; /* Green for source */
-    width: 36px;
-    height: 36px;
-    margin: -18px 0 0 -18px;
-    
-    &::after {
-      width: 28px;
-      height: 28px;
-      margin: 4px 0 0 4px;
-    }
+    background: variables.$primary;
   }
 }
 
 .destinationMarker {
   :global(.marker-pin) {
-    background: #f44336; /* Red for destination */
-    width: 36px;
-    height: 36px;
-    margin: -18px 0 0 -18px;
-    
-    &::after {
-      width: 28px;
-      height: 28px;
-      margin: 4px 0 0 4px;
-    }
+    background: variables.$secondary;
   }
 }
 
 .intermediateMarker {
   :global(.marker-pin) {
-    background: #2196f3; /* Blue for intermediate points */
+    background: variables.$warning;
     width: 24px;
     height: 24px;
     margin: -12px 0 0 -12px;

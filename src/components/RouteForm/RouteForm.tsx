@@ -249,60 +249,45 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      onCalculateRoute(source, intermediatePoints, destination);
+    if (!validateForm()) {
+      return;
     }
+
+    onCalculateRoute(source, intermediatePoints, destination);
   };
 
-  const handleExampleClick = (
-    location: string,
-    type: 'source' | 'destination' | 'intermediate'
-  ) => {
+  const handleQuickRoute = () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    onCalculateRoute(source, [], destination);
+  };
+
+  const handleUseExample = (location: string, type: 'source' | 'destination' | 'intermediate') => {
     if (type === 'source') {
       setSource(location);
     } else if (type === 'destination') {
       setDestination(location);
     } else {
-      // For intermediate, replace the first empty one or add a new one
-      const emptyIndex = intermediatePoints.findIndex((point) => point.trim() === '');
-      if (emptyIndex >= 0) {
-        handleIntermediatePointChange(emptyIndex, location);
-      } else {
-        setIntermediatePoints([...intermediatePoints, location]);
-      }
+      // Add as intermediate point
+      setIntermediatePoints([...intermediatePoints, location]);
     }
-    setShowExamples(false);
-  };
-
-  const handleQuickRoute = () => {
-    // Set a quick route between two random example locations
-    const availableLocations = [...EXAMPLE_LOCATIONS];
-
-    // Get random source
-    const sourceIndex = Math.floor(Math.random() * availableLocations.length);
-    const sourceLocation = availableLocations[sourceIndex];
-    availableLocations.splice(sourceIndex, 1);
-
-    // Get random destination
-    const destIndex = Math.floor(Math.random() * availableLocations.length);
-    const destLocation = availableLocations[destIndex];
-
-    setSource(sourceLocation);
-    setDestination(destLocation);
-    setIntermediatePoints([]);
   };
 
   return (
     <div className={styles.formContainer}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h3>Plan Your Route</h3>
-        <p className={styles.optimizationNote}>
-          Routes will be automatically optimized to find the shortest path from your starting point
-          through all intermediate points to your destination, regardless of the order you enter
-          them.
-        </p>
 
-        {/* Source input */}
+        <div className={styles.optimizationNote}>
+          Your route will be optimized from the starting point through all intermediate points to
+          the destination, regardless of the order you enter them. This ensures the most efficient
+          path.
+        </div>
+
+        {_formError && <div className={styles.errorMessage}>{_formError}</div>}
+
         <div className={styles.inputGroup}>
           <label htmlFor="source">Starting Point</label>
           <input
@@ -312,21 +297,21 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
             onChange={(e) => setSource(e.target.value)}
             placeholder="Enter starting location"
             ref={sourceInputRef}
-            required
+            disabled={isCalculating}
           />
         </div>
 
         {intermediatePoints.map((point, index) => (
-          <div key={index} className={styles.formGroup}>
-            <label htmlFor={`intermediate-${index}`}>Via Point {index + 1}:</label>
-            <div className={styles.formGroup}>
+          <div className={styles.inputGroup} key={`intermediate-${index}`}>
+            <label htmlFor={`intermediate-${index}`}>Intermediate Point {index + 1}</label>
+            <div className={styles.inputWithButton}>
               <input
                 id={`intermediate-${index}`}
-                ref={setIntermediateInputRef(index)}
                 type="text"
                 value={point}
                 onChange={(e) => handleIntermediatePointChange(index, e.target.value)}
                 placeholder="Enter intermediate location"
+                ref={setIntermediateInputRef(index)}
                 disabled={isCalculating}
               />
               <button
@@ -334,33 +319,32 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
                 className={styles.removeButton}
                 onClick={() => handleRemoveIntermediatePoint(index)}
                 disabled={isCalculating}
+                aria-label="Remove intermediate point"
               >
-                ✕
+                ×
               </button>
             </div>
           </div>
         ))}
 
-        <div className={styles.formGroup}>
-          <button
-            type="button"
-            className={styles.addButton}
-            onClick={handleAddIntermediatePoint}
-            disabled={isCalculating || intermediatePoints.length >= 5}
-          >
-            + Add Via Point
-          </button>
-        </div>
+        <button
+          type="button"
+          className={styles.addButton}
+          onClick={handleAddIntermediatePoint}
+          disabled={isCalculating || intermediatePoints.length >= 5}
+        >
+          Add Intermediate Point
+        </button>
 
-        <div className={styles.formGroup}>
-          <label htmlFor="destination-input">Destination:</label>
+        <div className={styles.inputGroup}>
+          <label htmlFor="destination">Destination</label>
           <input
-            id="destination-input"
-            ref={destInputRef}
+            id="destination"
             type="text"
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
-            placeholder="Enter destination location"
+            placeholder="Enter destination"
+            ref={destInputRef}
             disabled={isCalculating}
           />
         </div>
@@ -369,9 +353,13 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
           <button type="submit" className={styles.calculateButton} disabled={isCalculating}>
             {isCalculating ? 'Calculating...' : 'Calculate Route'}
           </button>
-
-          <button type="button" className={styles.quickRouteButton} onClick={handleQuickRoute}>
-            Quick Demo Route
+          <button
+            type="button"
+            className={styles.quickRouteButton}
+            onClick={handleQuickRoute}
+            disabled={isCalculating}
+          >
+            Direct Route
           </button>
         </div>
 
@@ -381,36 +369,33 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
             className={styles.examplesToggle}
             onClick={() => setShowExamples(!showExamples)}
           >
-            {showExamples ? 'Hide Examples' : 'Show Example Locations'}
+            {showExamples ? 'Hide Examples' : 'Show Examples'}
           </button>
 
           {showExamples && (
             <div className={styles.examplesList}>
               <p className={styles.examplesHint}>
-                For best results, include city or country names with locations
+                Click on a location to use it in your route planning
               </p>
-              {EXAMPLE_LOCATIONS.map((location, index) => (
-                <div key={index} className={styles.exampleItem}>
-                  <span>{location}</span>
-                  <div className={styles.exampleButtons}>
-                    <button type="button" onClick={() => handleExampleClick(location, 'source')}>
-                      Use as Source
-                    </button>
+
+              <div className={styles.exampleItem}>
+                <span>Popular Locations</span>
+                <div className={styles.exampleButtons}>
+                  {EXAMPLE_LOCATIONS.map((location, index) => (
                     <button
+                      key={`example-${index}`}
                       type="button"
-                      onClick={() => handleExampleClick(location, 'intermediate')}
+                      onClick={() => {
+                        if (!source) handleUseExample(location, 'source');
+                        else if (!destination) handleUseExample(location, 'destination');
+                        else handleUseExample(location, 'intermediate');
+                      }}
                     >
-                      Add as Stop
+                      {location.split(',')[0]}
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleExampleClick(location, 'destination')}
-                    >
-                      Use as Destination
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           )}
         </div>

@@ -1,15 +1,50 @@
 @use "../../styles/variables" as variables;
 @use "../../styles/mixins" as mixins;
 
-.card {
+.busStopCard {
   background-color: white;
-  border: 1px solid rgba(variables.$dark, 0.1);
-  border-radius: variables.$border-radius-md;
-  padding: variables.$spacing-md;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(variables.$gray-900, 0.1);
+  border-radius: variables.$radius-md;
+  padding: variables.$spacing-4;
+  width: 100%;
+  margin: variables.$spacing-1;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.busStopName {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: variables.$text-primary;
+}
+
+.busStopCode {
+  font-size: 14px;
+  color: variables.$text-secondary;
+  margin-bottom: 8px;
+}
+
+.busStopAddress {
+  font-size: 14px;
+  color: variables.$text-secondary;
+  margin-bottom: 12px;
+}
+
+.busStopZones {
   display: flex;
-  margin: variables.$spacing-xs;
-  box-shadow: variables.$shadow-sm;
-  @include mixins.card-hover;
+  flex-wrap: wrap;
+  margin-top: variables.$spacing-1;
+}
+
+.zoneContainer {
+  display: flex;
+  gap: variables.$spacing-1;
 }
 
 .stopInfo {
@@ -41,13 +76,6 @@
   color: variables.$text-secondary;
   font-size: variables.$text-base;
   margin-left: auto;
-}
-
-.zoneContainer {
-  margin-top: variables.$spacing-xs;
-  display: flex;
-  flex-direction: column;
-  gap: variables.$spacing-xs;
 }
 
 
