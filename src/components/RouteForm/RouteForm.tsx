@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import styles from './RouteForm.module.scss';
+import {
+  isGoogleMapsLoaded,
+  createAutocomplete,
+  clearInstanceListeners,
+  initGoogleMapsListener,
+} from '../../services/googleMapsService';
 
-// Declare global google variable to fix TypeScript errors
-declare global {
-  interface Window {
-    google: any;
-  }
-}
+import styles from './RouteForm.module.scss';
 
 interface RouteFormProps {
   onCalculateRoute: (source: string, intermediatePoints: string[], destination: string) => void;
@@ -31,7 +31,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   const [destination, setDestination] = useState<string>('');
   const [intermediatePoints, setIntermediatePoints] = useState<string[]>([]);
   const [showExamples, setShowExamples] = useState<boolean>(false);
-  const [formError, setFormError] = useState<string | null>(null);
+  const [_formError, setFormError] = useState<string | null>(null); // Prefix with _ to indicate it's intentionally unused
   const [googleLoaded, setGoogleLoaded] = useState<boolean>(false);
 
   // Refs for input elements
@@ -48,7 +48,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   useEffect(() => {
     // Function to initialize Google Places API
     const initGooglePlaces = () => {
-      if (window.google && window.google.maps && window.google.maps.places) {
+      if (isGoogleMapsLoaded()) {
         console.log('Google Places API is loaded and ready');
         setGoogleLoaded(true);
       } else {
@@ -57,24 +57,16 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     };
 
     // Check if already loaded
-    if (window.google && window.google.maps && window.google.maps.places) {
+    if (isGoogleMapsLoaded()) {
       setGoogleLoaded(true);
       return;
     }
 
-    // Listen for the custom event from index.html
-    window.addEventListener('google-maps-loaded', initGooglePlaces);
-
-    // Also set up a fallback timer in case the event doesn't fire
-    const timer = setTimeout(() => {
-      initGooglePlaces();
-    }, 1000);
+    // Set up listener for Google Maps API loading
+    const cleanup = initGoogleMapsListener(initGooglePlaces);
 
     // Clean up
-    return () => {
-      window.removeEventListener('google-maps-loaded', initGooglePlaces);
-      clearTimeout(timer);
-    };
+    return cleanup;
   }, []);
 
   // Initialize autocomplete when Google API is loaded
@@ -89,22 +81,21 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     if (sourceInputRef.current) {
       try {
         // Create new autocomplete instance
-        sourceAutocompleteRef.current = new window.google.maps.places.Autocomplete(
-          sourceInputRef.current,
-          {
-            componentRestrictions: { country: 'fi' },
-            fields: ['formatted_address', 'geometry', 'name', 'place_id'],
-            types: ['geocode', 'establishment'],
-          }
-        );
+        sourceAutocompleteRef.current = createAutocomplete(sourceInputRef.current, {
+          componentRestrictions: { country: 'fi' },
+          fields: ['formatted_address', 'geometry', 'name', 'place_id'],
+          types: ['geocode', 'establishment'],
+        });
 
         // Add place_changed listener
-        sourceAutocompleteRef.current.addListener('place_changed', () => {
-          const place = sourceAutocompleteRef.current.getPlace();
-          if (place && place.formatted_address) {
-            setSource(place.formatted_address);
-          }
-        });
+        if (sourceAutocompleteRef.current) {
+          sourceAutocompleteRef.current.addListener('place_changed', () => {
+            const place = sourceAutocompleteRef.current.getPlace();
+            if (place && place.formatted_address) {
+              setSource(place.formatted_address);
+            }
+          });
+        }
 
         // Prevent form submission on enter
         sourceInputRef.current.addEventListener('keydown', (e) => {
@@ -119,22 +110,21 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     if (destInputRef.current) {
       try {
         // Create new autocomplete instance
-        destAutocompleteRef.current = new window.google.maps.places.Autocomplete(
-          destInputRef.current,
-          {
-            componentRestrictions: { country: 'fi' },
-            fields: ['formatted_address', 'geometry', 'name', 'place_id'],
-            types: ['geocode', 'establishment'],
-          }
-        );
+        destAutocompleteRef.current = createAutocomplete(destInputRef.current, {
+          componentRestrictions: { country: 'fi' },
+          fields: ['formatted_address', 'geometry', 'name', 'place_id'],
+          types: ['geocode', 'establishment'],
+        });
 
         // Add place_changed listener
-        destAutocompleteRef.current.addListener('place_changed', () => {
-          const place = destAutocompleteRef.current.getPlace();
-          if (place && place.formatted_address) {
-            setDestination(place.formatted_address);
-          }
-        });
+        if (destAutocompleteRef.current) {
+          destAutocompleteRef.current.addListener('place_changed', () => {
+            const place = destAutocompleteRef.current.getPlace();
+            if (place && place.formatted_address) {
+              setDestination(place.formatted_address);
+            }
+          });
+        }
 
         // Prevent form submission on enter
         destInputRef.current.addEventListener('keydown', (e) => {
@@ -150,22 +140,21 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
       if (inputRef) {
         try {
           // Create new autocomplete instance
-          intermediateAutocompleteRefs.current[index] = new window.google.maps.places.Autocomplete(
-            inputRef,
-            {
-              componentRestrictions: { country: 'fi' },
-              fields: ['formatted_address', 'geometry', 'name', 'place_id'],
-              types: ['geocode', 'establishment'],
-            }
-          );
+          intermediateAutocompleteRefs.current[index] = createAutocomplete(inputRef, {
+            componentRestrictions: { country: 'fi' },
+            fields: ['formatted_address', 'geometry', 'name', 'place_id'],
+            types: ['geocode', 'establishment'],
+          });
 
           // Add place_changed listener
-          intermediateAutocompleteRefs.current[index].addListener('place_changed', () => {
-            const place = intermediateAutocompleteRefs.current[index].getPlace();
-            if (place && place.formatted_address) {
-              handleIntermediatePointChange(index, place.formatted_address);
-            }
-          });
+          if (intermediateAutocompleteRefs.current[index]) {
+            intermediateAutocompleteRefs.current[index].addListener('place_changed', () => {
+              const place = intermediateAutocompleteRefs.current[index].getPlace();
+              if (place && place.formatted_address) {
+                handleIntermediatePointChange(index, place.formatted_address);
+              }
+            });
+          }
 
           // Prevent form submission on enter
           inputRef.addEventListener('keydown', (e) => {
@@ -182,14 +171,14 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
       try {
         // Clean up all event listeners
         if (sourceAutocompleteRef.current) {
-          window.google.maps.event.clearInstanceListeners(sourceAutocompleteRef.current);
+          clearInstanceListeners(sourceAutocompleteRef.current);
         }
         if (destAutocompleteRef.current) {
-          window.google.maps.event.clearInstanceListeners(destAutocompleteRef.current);
+          clearInstanceListeners(destAutocompleteRef.current);
         }
         intermediateAutocompleteRefs.current.forEach((autocomplete) => {
           if (autocomplete) {
-            window.google.maps.event.clearInstanceListeners(autocomplete);
+            clearInstanceListeners(autocomplete);
           }
         });
       } catch (error) {

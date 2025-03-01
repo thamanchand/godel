@@ -30,7 +30,7 @@ const App = () => {
       </header>
       <main className={styles.main}>
         {error && <div className={styles.error}>{error}</div>}
-        <RouteForm onCalculateRoute={calculateRoute} loading={isCalculating} />
+        <RouteForm onCalculateRoute={calculateRoute} isCalculating={isCalculating} />
         <Map
           position={mapPosition}
           onPositionChange={setMapPosition}

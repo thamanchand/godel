@@ -1,4 +1,5 @@
 import { Position } from '../../types/busStop';
+import { geocodeWithGoogle, getDirections, isGoogleMapsLoaded } from '../googleMapsService';
 
 // Define the route point type
 export interface RoutePoint {
@@ -38,12 +39,7 @@ export const geocodeLocation = async (
 ): Promise<Position & { placeId?: string }> => {
   try {
     // First try to use Google Places API if available
-    if (
-      typeof window !== 'undefined' &&
-      window.google &&
-      window.google.maps &&
-      window.google.maps.places
-    ) {
+    if (isGoogleMapsLoaded()) {
       try {
         return await geocodeWithGooglePlaces(locationName);
       } catch (googleError) {
@@ -138,32 +134,7 @@ export const geocodeLocation = async (
 
 // Geocode using Google Places API
 const geocodeWithGooglePlaces = (locationName: string): Promise<Position & { placeId: string }> => {
-  return new Promise((resolve, reject) => {
-    try {
-      const geocoder = new window.google.maps.Geocoder();
-
-      geocoder.geocode(
-        {
-          address: locationName,
-          componentRestrictions: { country: 'fi' }, // Restrict to Finland
-        },
-        (results: any, status: any) => {
-          if (status === window.google.maps.GeocoderStatus.OK && results && results.length > 0) {
-            const location = results[0].geometry.location;
-            resolve({
-              latitude: location.lat(),
-              longitude: location.lng(),
-              placeId: results[0].place_id,
-            });
-          } else {
-            reject(new Error(`Google geocoding failed with status: ${status}`));
-          }
-        }
-      );
-    } catch (error) {
-      reject(error);
-    }
-  });
+  return geocodeWithGoogle(locationName, { componentRestrictions: { country: 'fi' } });
 };
 
 // Get route between two points using OpenRouteService API
@@ -227,12 +198,7 @@ async function getRouteSegment(
     console.error('Error fetching route from OpenRouteService:', error);
 
     // Try Google Directions API if available
-    if (
-      typeof window !== 'undefined' &&
-      window.google &&
-      window.google.maps &&
-      window.google.maps.DirectionsService
-    ) {
+    if (isGoogleMapsLoaded()) {
       try {
         return await getRouteWithGoogleDirections(start, end, startPoint, endPoint);
       } catch (googleError) {
@@ -260,77 +226,31 @@ async function getRouteSegment(
 }
 
 // Get route using Google Directions API
-const getRouteWithGoogleDirections = (
+const getRouteWithGoogleDirections = async (
   start: [number, number],
   end: [number, number],
   startPoint: RoutePoint,
   endPoint: RoutePoint
 ): Promise<RouteSegment> => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (typeof window === 'undefined' || !window.google || !window.google.maps) {
-        throw new Error('Google Maps API not available');
-      }
+  // Define origin and destination
+  const origin = startPoint.placeId
+    ? { placeId: startPoint.placeId }
+    : { lat: start[0], lng: start[1] };
 
-      const directionsService = new window.google.maps.DirectionsService();
+  const destination = endPoint.placeId
+    ? { placeId: endPoint.placeId }
+    : { lat: end[0], lng: end[1] };
 
-      // Define the request with proper types
-      const request: any = {
-        travelMode: window.google.maps.TravelMode.DRIVING,
-      };
+  // Get directions
+  const result = await getDirections(origin, destination);
 
-      // Set origin and destination
-      if (startPoint.placeId) {
-        request.origin = { placeId: startPoint.placeId };
-      } else {
-        request.origin = { lat: start[0], lng: start[1] };
-      }
-
-      if (endPoint.placeId) {
-        request.destination = { placeId: endPoint.placeId };
-      } else {
-        request.destination = { lat: end[0], lng: end[1] };
-      }
-
-      directionsService.route(request, (result: any, status: any) => {
-        if (status === window.google.maps.DirectionsStatus.OK && result.routes.length > 0) {
-          const route = result.routes[0];
-          const path: [number, number][] = [];
-
-          // Extract path from the route
-          const path_points = route.overview_path;
-          for (let i = 0; i < path_points.length; i++) {
-            path.push([path_points[i].lat(), path_points[i].lng()]);
-          }
-
-          // Extract distance and duration
-          let distance = 0;
-          let duration = 0;
-
-          for (let i = 0; i < route.legs.length; i++) {
-            distance += route.legs[i].distance.value;
-            duration += route.legs[i].duration.value;
-          }
-
-          // Convert to km and minutes
-          distance = distance / 1000;
-          duration = duration / 60;
-
-          resolve({
-            from: startPoint,
-            to: endPoint,
-            path,
-            distance,
-            duration,
-          });
-        } else {
-          reject(new Error(`Google Directions API failed with status: ${status}`));
-        }
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
+  return {
+    from: startPoint,
+    to: endPoint,
+    path: result.path,
+    distance: result.distance,
+    duration: result.duration,
+  };
 };
 
 // Alternative routing API as backup
