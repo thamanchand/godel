@@ -1,0 +1,83 @@
+// Colors
+$dark: #333333;
+$gray: #999999;
+$blue: #41B6E6;
+$white: #FFFFFF;
+$light-gray: #EDEDED;
+$light: #F8F8F8;
+
+// Semantic Colors
+$text-primary: $dark;
+$text-secondary: $gray;
+$error-color: #dc3545;
+
+// Font sizes
+$text-xs: 12px;    // Very small text
+$text-sm: 14px;    // Small text, secondary info
+$text-base: 16px;  // Base body text
+$text-lg: 18px;    // Large text, important info
+$text-xl: 20px;    // Extra large text, section headers
+$text-2xl: 22px;   // Heading text
+$text-3xl: 26px;   // Main heading text
+
+// Font weights
+$font-normal: 400;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+
+// Border radius
+$border-radius-sm: 6px;
+$border-radius-md: 12px;
+
+// Shadows
+$shadow-sm: 0 4px 8px rgba($dark, 0.1);
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+
+// Zone Colors
+$zone-a: #007AC9;
+$zone-b: #00985F;
+$zone-c: #CA4081;
+$zone-d: #8B4B99;
+$zone-unknown: #666666;
+
+// Gradients
+$gradient-tech: linear-gradient(90deg, $dark 0%, $blue 100%);
+
+// Spacing
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Border radius
+$border-radius-lg: 12px;
+
+// Shadows
+$shadow-md: 0 6px 12px rgba($dark, 0.15);
+$shadow-lg: 0 10px 15px rgba($dark, 0.1);
+
+// Breakpoints
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// Border color
+$border-color: $blue;
+
+// Background primary
+$background-primary: $white; 

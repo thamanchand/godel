@@ -1,0 +1,14 @@
+@use "../../../styles/variables" as variables;
+
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  width: 24px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: variables.$text-base;;
+  color: white;
+} 

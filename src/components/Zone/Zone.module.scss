@@ -1,0 +1,41 @@
+@use "../../styles/variables" as variables;
+
+.zoneContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zoneText {
+  color: variables.$dark;
+  font-size: variables.$text-base;
+  font-weight: variables.$font-semibold;
+}
+
+.zone {
+  padding: variables.$spacing-xs variables.$spacing-sm;
+  border-radius: variables.$border-radius-sm;
+  font-size: variables.$text-sm;
+  font-weight: variables.$font-semibold;
+  color: white;
+}
+
+.zoneA {
+  background-color: variables.$zone-a;
+}
+
+.zoneB {
+  background-color: variables.$zone-b;
+}
+
+.zoneC {
+  background-color: variables.$zone-c;
+}
+
+.zoneD {
+  background-color: variables.$zone-d;
+}
+
+.zoneUnknown {
+  background-color: variables.$zone-unknown;
+} 

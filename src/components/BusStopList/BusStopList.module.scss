@@ -1,0 +1,67 @@
+@use "../../styles/variables" as variables;
+@use "../../styles/mixins" as mixins;
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: variables.$spacing-xs;
+  height: 560px;
+  overflow-y: auto;
+  padding: variables.$spacing-xs;
+  background-color: white;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    &-track { background: transparent; }
+    &-thumb {
+      background-color: rgba(variables.$text-secondary, 0.3);
+      border-radius: 4px;
+    }
+  }
+}
+
+.loading, .noStops {
+  @include mixins.flex-center;
+  height: 100%;
+  color: variables.$text-secondary;
+  font-size: variables.$text-base;
+}
+
+.loading {
+  text {
+    animation: pulse 1.5s infinite;
+  }
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+  padding: variables.$spacing-xs variables.$spacing-sm;
+  border-bottom: 1px solid rgba(variables.$dark, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.currentLocation {
+  display: flex;
+  align-items: center;
+
+  h3 {
+    color: variables.$text-primary;
+    font-size: variables.$text-xl;
+    font-weight: variables.$font-semibold;
+    white-space: nowrap;
+    margin: 6px;
+  }
+
+  .addressText {
+    color: variables.$text-primary;
+    font-size: variables.$text-lg;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

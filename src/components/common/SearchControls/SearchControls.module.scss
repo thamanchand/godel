@@ -1,0 +1,58 @@
+@use "../../../styles/variables" as variables;
+
+.controls {
+  display: flex;
+  gap: variables.$spacing-sm;
+  flex: 1;
+  max-width: 800px;
+
+  @media (max-width: variables.$breakpoint-sm) {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  height: 36px;
+  padding: 0 variables.$spacing-sm;
+  border: 1px solid rgba(variables.$dark, 0.1);
+  border-radius: variables.$border-radius-sm;
+  font-size: variables.$text-base;
+
+  &:focus {
+    border-color: variables.$blue;
+  }
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: variables.$spacing-xs;
+}
+
+.filterLabel {
+  color: variables.$text-primary;
+  font-size: variables.$text-base;
+  font-weight: variables.$font-semibold;
+  margin: 10px;
+}
+
+.filterSelect {
+  height: 36px;
+  padding: 0 32px 0 variables.$spacing-sm;
+  border: 1px solid rgba(variables.$dark, 0.1);
+  border-radius: variables.$border-radius-sm;
+  font-size: variables.$text-sm;
+  color: variables.$text-primary;
+  background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23333333' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+
+  &:focus {
+    border-color: variables.$blue;
+  }
+}

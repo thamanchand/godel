@@ -1,0 +1,14 @@
+@use './variables' as variables;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card-hover {
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-2px);
+  }
+} 

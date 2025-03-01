@@ -1,0 +1,53 @@
+@use "../../styles/variables" as variables;
+@use "../../styles/mixins" as mixins;
+
+.card {
+  background-color: white;
+  border: 1px solid rgba(variables.$dark, 0.1);
+  border-radius: variables.$border-radius-md;
+  padding: variables.$spacing-md;
+  display: flex;
+  margin: variables.$spacing-xs;
+  box-shadow: variables.$shadow-sm;
+  @include mixins.card-hover;
+}
+
+.stopInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stopName {
+  margin: 0;
+  font-size: variables.$text-lg;
+  font-weight: variables.$font-semibold;
+  color: variables.$text-primary;
+}
+
+.stopDistance {
+  margin: 0;
+  font-size: variables.$text-base;
+  color: variables.$gray;
+}
+
+.zoneText {
+  color: variables.$text-secondary;
+  font-size: variables.$text-base;
+  margin-left: auto;
+}
+
+.zoneContainer {
+  margin-top: variables.$spacing-xs;
+  display: flex;
+  flex-direction: column;
+  gap: variables.$spacing-xs;
+}
+
+

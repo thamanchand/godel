@@ -1,0 +1,393 @@
+@use "../../styles/variables" as variables;
+
+.mapContainer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 0; /* Ensure proper stacking context */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+}
+
+.loadingOverlay {
+  background-color: rgba(255, 255, 255, 0.9);
+  flex-direction: column;
+  gap: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #2196f3;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.routeSummary {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-width: 250px;
+  font-size: 14px;
+
+  p {
+    margin: 5px 0;
+  }
+}
+
+.routeLegend {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-width: 300px;
+  font-size: 14px;
+
+  h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+  }
+
+  .legendItems {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+    
+    /* Scrollbar styling */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background: #aaa;
+    }
+  }
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.colorBox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.legendText {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mapInstructions {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #555;
+  z-index: 1000;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  opacity: 0.8;
+  
+  &:hover {
+    opacity: 1;
+  }
+  
+  p {
+    margin: 0;
+  }
+}
+
+/* Make sure the map container takes full height */
+:global(.leaflet-container) {
+  height: 100% !important;
+  width: 100% !important;
+  z-index: 0 !important; /* Lower z-index to prevent conflicts */
+  
+  /* Fix for touch devices */
+  &.leaflet-touch {
+    .leaflet-control-zoom {
+      border: none !important;
+    }
+  }
+}
+
+/* Style the zoom controls */
+:global(.leaflet-control-zoom) {
+  border: none !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+  margin: 15px !important;
+  z-index: 800 !important; /* Lower z-index to prevent conflicts */
+}
+
+:global(.leaflet-control-zoom-in),
+:global(.leaflet-control-zoom-out) {
+  background-color: white !important;
+  color: #333 !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 18px !important;
+  
+  &:hover {
+    background-color: #f5f5f5 !important;
+    color: #000 !important;
+  }
+}
+
+/* Style the popups */
+:global(.leaflet-popup-content-wrapper) {
+  border-radius: 8px !important;
+  padding: 5px !important;
+}
+
+:global(.leaflet-popup-content) {
+  margin: 10px 12px !important;
+  line-height: 1.5 !important;
+}
+
+:global(.leaflet-popup-tip) {
+  background-color: white !important;
+}
+
+.markerIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Custom markers */
+.customMarker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  :global(.marker-pin) {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    background: #c30b82;
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -15px 0 0 -15px;
+    
+    &::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      margin: 3px 0 0 3px;
+      background: #fff;
+      position: absolute;
+      border-radius: 50%;
+    }
+  }
+}
+
+.sourceMarker {
+  :global(.marker-pin) {
+    background: #4caf50; /* Green for source */
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    
+    &::after {
+      width: 28px;
+      height: 28px;
+      margin: 4px 0 0 4px;
+    }
+  }
+}
+
+.destinationMarker {
+  :global(.marker-pin) {
+    background: #f44336; /* Red for destination */
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    
+    &::after {
+      width: 28px;
+      height: 28px;
+      margin: 4px 0 0 4px;
+    }
+  }
+}
+
+.intermediateMarker {
+  :global(.marker-pin) {
+    background: #2196f3; /* Blue for intermediate points */
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    
+    &::after {
+      width: 18px;
+      height: 18px;
+      margin: 3px 0 0 3px;
+    }
+  }
+}
+
+.markerLegend {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-width: 250px;
+  font-size: 14px;
+
+  h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+  }
+}
+
+.markerSymbol {
+  width: 16px;
+  height: 16px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  margin-right: 8px;
+  flex-shrink: 0;
+  position: relative;
+  
+  &::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    margin: 2px 0 0 2px;
+    background: #fff;
+    position: absolute;
+    border-radius: 50%;
+  }
+}
+
+.sourceSymbol {
+  background-color: #4caf50; /* Green for source */
+}
+
+.intermediateSymbol {
+  background-color: #2196f3; /* Blue for intermediate */
+}
+
+.destinationSymbol {
+  background-color: #f44336; /* Red for destination */
+}
+
+/* Google Places Autocomplete styling */
+:global(.pac-container) {
+  z-index: 9999 !important; /* Ensure it appears above everything */
+  border-radius: 8px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid #e0e0e0 !important;
+  margin-top: 5px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+  pointer-events: auto !important; /* Ensure clicks are captured */
+}
+
+:global(.pac-item) {
+  padding: 8px 10px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  
+  &:hover {
+    background-color: #f5f5f5 !important;
+  }
+}
+
+:global(.pac-item-selected) {
+  background-color: #e3f2fd !important;
+}
+
+:global(.pac-icon) {
+  margin-right: 10px !important;
+}
+
+:global(.pac-item-query) {
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+:global(.pac-matched) {
+  font-weight: bold !important;
+  color: #1976d2 !important;
+} 
