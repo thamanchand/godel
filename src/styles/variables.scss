@@ -1,94 +1,107 @@
 // Colors
-$primary: #3b82f6; // Blue
-$primary-dark: #2563eb;
-$primary-light: #93c5fd;
+$royal-blue-traditional: #00296b;
+$marian-blue: #003f88;
+$polynesian-blue: #00509d;
+$mikado-yellow: #fdc500;
+$gold: #ffd500;
 
-$secondary: #10b981; // Green
-$secondary-dark: #059669;
-$secondary-light: #a7f3d0;
+// Primary palette
+$primary: $polynesian-blue;
+$primary-light: lighten($primary, 10%);
+$primary-dark: $marian-blue;
+$primary-darker: $royal-blue-traditional;
 
-$success: #10b981;
-$info: #3b82f6;
-$warning: #f59e0b;
-$danger: #ef4444;
+// Secondary palette
+$secondary: $mikado-yellow;
+$secondary-light: $gold;
+$secondary-dark: darken($mikado-yellow, 10%);
 
-// Neutral colors
-$gray-50: #f9fafb;
-$gray-100: #f3f4f6;
-$gray-200: #e5e7eb;
-$gray-300: #d1d5db;
-$gray-400: #9ca3af;
-$gray-500: #6b7280;
-$gray-600: #4b5563;
-$gray-700: #374151;
-$gray-800: #1f2937;
-$gray-900: #111827;
+// Semantic colors
+$success: #4caf50;
+$warning: $mikado-yellow;
+$danger: #f44336;
+$info: lighten($polynesian-blue, 15%);
+
+// Grayscale
+$white: #ffffff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000000;
 
 // Text colors
-$text-primary: $gray-800;
-$text-secondary: $gray-600;
-$text-muted: $gray-500;
-$text-light: $gray-400;
+$text-primary: $gray-900;
+$text-secondary: $gray-700;
+$text-muted: $gray-600;
+$text-light: $gray-500;
+$text-white: $white;
 
 // Background colors
-$bg-light: $gray-50;
-$bg-white: #ffffff;
-$bg-dark: $gray-900;
+$bg-light: $gray-100;
+$bg-dark: $gray-800;
+$bg-primary: $primary;
+$bg-secondary: $secondary;
+$bg-white: $white;
 
 // Border colors
-$border-light: $gray-200;
-$border-medium: $gray-300;
-$border-dark: $gray-400;
+$border-light: $gray-300;
+$border-dark: $gray-600;
+$border-primary: $primary;
+$border-secondary: $secondary;
 
 // Spacing
-$spacing-1: 0.25rem; // 4px
-$spacing-2: 0.5rem;  // 8px
-$spacing-3: 0.75rem; // 12px
-$spacing-4: 1rem;    // 16px
-$spacing-5: 1.25rem; // 20px
-$spacing-6: 1.5rem;  // 24px
-$spacing-8: 2rem;    // 32px
-$spacing-10: 2.5rem; // 40px
-$spacing-12: 3rem;   // 48px
-$spacing-16: 4rem;   // 64px
-$spacing-20: 5rem;   // 80px
-$spacing-24: 6rem;   // 96px
+$spacing-1: 0.25rem;
+$spacing-2: 0.5rem;
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 1.5rem;
+$spacing-6: 2rem;
+$spacing-7: 2.5rem;
+$spacing-8: 3rem;
+$spacing-9: 4rem;
+$spacing-10: 5rem;
 
 // Border radius
-$radius-sm: 0.25rem; // 4px
-$radius-md: 0.5rem;  // 8px
-$radius-lg: 0.75rem; // 12px
-$radius-xl: 1rem;    // 16px
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$radius-xl: 1rem;
 $radius-full: 9999px;
 
-// Shadows
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+// Font sizes
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.875rem;
+$font-size-4xl: 2.25rem;
+$font-size-5xl: 3rem;
 
-// Typography
-$font-size-xs: 0.75rem;  // 12px
-$font-size-sm: 0.875rem; // 14px
-$font-size-base: 1rem;   // 16px
-$font-size-lg: 1.125rem; // 18px
-$font-size-xl: 1.25rem;  // 20px
-$font-size-2xl: 1.5rem;  // 24px
-$font-size-3xl: 1.875rem; // 30px
-$font-size-4xl: 2.25rem;  // 36px
-
+// Font weights
 $font-weight-light: 300;
 $font-weight-normal: 400;
 $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
 
-// Breakpoints
-$breakpoint-sm: 640px;
-$breakpoint-md: 768px;
-$breakpoint-lg: 1024px;
-$breakpoint-xl: 1280px;
-$breakpoint-2xl: 1536px;
+// Line heights
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-loose: 1.75;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
 // Z-index
 $z-index-dropdown: 1000;
@@ -100,9 +113,16 @@ $z-index-popover: 1060;
 $z-index-tooltip: 1070;
 
 // Transitions
-$transition-base: all 0.2s ease;
-$transition-fast: all 0.1s ease;
-$transition-slow: all 0.3s ease;
+$transition-base: all 0.2s ease-in-out;
+$transition-slow: all 0.3s ease-in-out;
+$transition-fast: all 0.1s ease-in-out;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
 
 // Zone Colors
 $zone-a: #007AC9;
@@ -129,7 +149,6 @@ $border-radius-lg: $radius-xl;
 // For backward compatibility
 $dark: $gray-900;
 $blue: $primary;
-$white: $bg-white;
 $light-gray: $gray-200;
 $light: $gray-100;
 $border-color: $primary;

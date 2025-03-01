@@ -257,14 +257,6 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating, 
     onCalculateRoute(source, intermediatePoints, destination);
   };
 
-  const handleQuickRoute = () => {
-    if (!validateForm()) {
-      return;
-    }
-
-    onCalculateRoute(source, [], destination);
-  };
-
   const handleUseExample = (location: string, type: 'source' | 'destination' | 'intermediate') => {
     if (type === 'source') {
       setSource(location);
@@ -373,25 +365,9 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating, 
           <button type="submit" className={styles.calculateButton} disabled={isCalculating}>
             {isCalculating ? 'Calculating...' : 'Calculate Route'}
           </button>
-          <button
-            type="button"
-            className={styles.quickRouteButton}
-            onClick={handleQuickRoute}
-            disabled={isCalculating}
-          >
-            Direct Route
-          </button>
         </div>
 
         <div className={styles.examplesSection}>
-          <button
-            type="button"
-            className={styles.examplesToggle}
-            onClick={() => setShowExamples(!showExamples)}
-          >
-            {showExamples ? 'Hide Examples' : 'Show Examples'}
-          </button>
-
           {showExamples && (
             <div className={styles.examplesList}>
               <p className={styles.examplesHint}>

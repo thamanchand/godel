@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import L from 'leaflet';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -15,6 +16,14 @@ import { DEFAULT_POSITION } from '../../constants';
 import { Route } from '../../services/api/routeService';
 
 import styles from './Map.module.scss';
+
+// TypeScript declarations for browser globals
+declare global {
+  interface Window {
+    google: any;
+    ResizeObserver: typeof ResizeObserver;
+  }
+}
 
 interface MapProps {
   position: [number, number];
@@ -50,16 +59,16 @@ const intermediateIcon = L.divIcon({
   html: '<div class="marker-pin"></div>',
 });
 
-// Array of colors for route segments
+// Array of colors for route segments using the new color palette
 const SEGMENT_COLORS = [
-  '#2196f3', // Blue
-  '#4caf50', // Green
-  '#f44336', // Red
-  '#ff9800', // Orange
-  '#9c27b0', // Purple
-  '#00bcd4', // Cyan
-  '#ffeb3b', // Yellow
-  '#795548', // Brown
+  '#00509d', // Polynesian Blue (primary)
+  '#003f88', // Marian Blue (primary-dark)
+  '#00296b', // Royal Blue Traditional (primary-darker)
+  '#fdc500', // Mikado Yellow (secondary)
+  '#ffd500', // Gold (secondary-light)
+  '#ca9e00', // Darker Mikado Yellow (secondary-dark)
+  '#0070db', // Lighter Polynesian Blue
+  '#e6b200', // Darker Gold
 ];
 
 // Component to handle map events and initialization
@@ -71,30 +80,30 @@ const MapController = ({
   onMapReady: (map: L.Map) => void;
 }) => {
   const map = useMap();
+  const initialized = useRef(false);
 
   // Initialize map when it's ready
   useEffect(() => {
-    if (map) {
-      // Enable scroll wheel zoom
+    if (map && !initialized.current) {
+      initialized.current = true;
+
+      // Explicitly enable all interaction methods
       map.scrollWheelZoom.enable();
       map.touchZoom.enable();
       map.doubleClickZoom.enable();
       map.boxZoom.enable();
       map.keyboard.enable();
+      map.dragging.enable();
 
       // Notify parent component that map is ready
       onMapReady(map);
 
       // Force a resize to ensure the map renders correctly
-      try {
-        map.invalidateSize();
-      } catch (e) {
-        console.error('Error resizing map:', e);
-      }
+      const timer = setTimeout(() => {
+        map.invalidateSize({ animate: false });
+      }, 100);
 
-      return () => {
-        // Cleanup if needed
-      };
+      return () => clearTimeout(timer);
     }
   }, [map, onMapReady]);
 
@@ -107,14 +116,35 @@ const MapController = ({
     zoomend: () => {
       // Force a resize when zoom changes
       if (map) {
-        try {
-          map.invalidateSize();
-        } catch (e) {
-          console.error('Error resizing map:', e);
-        }
+        map.invalidateSize({ animate: false });
+      }
+    },
+    click: () => {
+      // Ensure map has focus for keyboard events
+      if (map && !map.keyboard.enabled()) {
+        map.keyboard.enable();
       }
     },
   });
+
+  // Ensure map is properly sized on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (map) {
+        map.invalidateSize({ animate: false });
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+
+    return undefined;
+  }, [map]);
 
   return null;
 };
@@ -128,29 +158,41 @@ const BoundsUpdater = ({
   map: L.Map | null;
 }) => {
   const leafletMap = useMap();
+  const boundsApplied = useRef(false);
 
   useEffect(() => {
-    if (bounds && leafletMap) {
+    if (bounds && leafletMap && !boundsApplied.current) {
       try {
         // Add padding to ensure all points are visible
         leafletMap.fitBounds(bounds, {
           padding: [50, 50],
           maxZoom: 14, // Limit max zoom to prevent zooming too far in
+          animate: true,
+          duration: 0.5,
         });
 
+        boundsApplied.current = true;
+
         // Force a resize after fitting bounds
-        try {
-          leafletMap.invalidateSize();
-        } catch (e) {
-          console.error('Error resizing map:', e);
-        }
+        const timer = setTimeout(() => {
+          leafletMap.invalidateSize({ animate: false });
+        }, 100);
+
+        return () => clearTimeout(timer);
       } catch (error) {
         console.error('Error fitting bounds:', error);
         // Fallback to a default view if bounds calculation fails
         leafletMap.setView([60.1699, 24.9384], 12);
       }
     }
+
+    return undefined;
   }, [leafletMap, bounds]);
+
+  // Reset the boundsApplied ref when bounds change
+  useEffect(() => {
+    boundsApplied.current = false;
+  }, [bounds]);
 
   return null;
 };
@@ -166,6 +208,7 @@ const Map = ({
   const routeSegments = route?.segments || [];
   const [mapReady, setMapReady] = useState(false);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   // Set map bounds to include all route points if available
   const getBounds = useCallback(() => {
@@ -224,19 +267,44 @@ const Map = ({
     setMapReady(true);
   };
 
-  // Force map resize when route changes
+  // Force map resize when route changes or container size changes
   useEffect(() => {
-    if (mapInstance && route) {
-      try {
-        mapInstance.invalidateSize();
-      } catch (e) {
-        console.error('Error resizing map:', e);
-      }
+    if (mapInstance) {
+      // Use a small delay to ensure the DOM has updated
+      const timer = setTimeout(() => {
+        mapInstance.invalidateSize({ animate: false });
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
+
+    return undefined;
   }, [mapInstance, route]);
 
+  // Set up resize observer to detect container size changes
+  useEffect(() => {
+    if (!mapContainerRef.current || !mapInstance) return undefined;
+
+    // Check if ResizeObserver is available (browser environment)
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        if (mapInstance) {
+          mapInstance.invalidateSize({ animate: false });
+        }
+      });
+
+      resizeObserver.observe(mapContainerRef.current);
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+
+    return undefined;
+  }, [mapInstance]);
+
   return (
-    <div className={styles.mapContainer}>
+    <div className={styles.mapContainer} ref={mapContainerRef}>
       <MapContainer
         center={position}
         zoom={12}
@@ -244,6 +312,9 @@ const Map = ({
         scrollWheelZoom={true}
         zoomControl={false} // We'll use the default Leaflet zoom control
         attributionControl={false}
+        doubleClickZoom={true}
+        dragging={true}
+        touchZoom={true}
       >
         {!route && !isCalculating && (
           <div className={styles.overlay}>
