@@ -39,39 +39,47 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   const destInputRef = useRef<HTMLInputElement>(null);
   const intermediateInputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
+  // Refs for autocomplete instances
+  const sourceAutocompleteRef = useRef<any>(null);
+  const destAutocompleteRef = useRef<any>(null);
+  const intermediateAutocompleteRefs = useRef<Array<any>>([]);
+
   // Check if Google Places API is loaded
   useEffect(() => {
-    const checkGoogleMapsLoaded = () => {
-      if (
-        typeof window !== 'undefined' &&
-        typeof window.google !== 'undefined' &&
-        typeof window.google.maps !== 'undefined' &&
-        typeof window.google.maps.places !== 'undefined'
-      ) {
+    // Function to initialize Google Places API
+    const initGooglePlaces = () => {
+      if (window.google && window.google.maps && window.google.maps.places) {
+        console.log('Google Places API is loaded and ready');
         setGoogleLoaded(true);
-        return true;
+      } else {
+        console.log('Google Places API not fully loaded yet');
       }
-      return false;
     };
 
-    // Check immediately
-    if (checkGoogleMapsLoaded()) return;
+    // Check if already loaded
+    if (window.google && window.google.maps && window.google.maps.places) {
+      setGoogleLoaded(true);
+      return;
+    }
 
-    // If not loaded yet, set up an interval to check
-    const interval = setInterval(() => {
-      if (checkGoogleMapsLoaded()) {
-        clearInterval(interval);
-      }
-    }, 100);
+    // Listen for the custom event from index.html
+    window.addEventListener('google-maps-loaded', initGooglePlaces);
+
+    // Also set up a fallback timer in case the event doesn't fire
+    const timer = setTimeout(() => {
+      initGooglePlaces();
+    }, 1000);
 
     // Clean up
-    return () => clearInterval(interval);
+    return () => {
+      window.removeEventListener('google-maps-loaded', initGooglePlaces);
+      clearTimeout(timer);
+    };
   }, []);
 
   // Initialize autocomplete when Google API is loaded
   useEffect(() => {
     if (!googleLoaded) {
-      console.log('Google Places API not fully loaded yet');
       return;
     }
 
@@ -80,9 +88,8 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     // Setup source autocomplete
     if (sourceInputRef.current) {
       try {
-        // Access the global google object directly
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const autocomplete = new (window as any).google.maps.places.Autocomplete(
+        // Create new autocomplete instance
+        sourceAutocompleteRef.current = new window.google.maps.places.Autocomplete(
           sourceInputRef.current,
           {
             componentRestrictions: { country: 'fi' },
@@ -90,6 +97,14 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
             types: ['geocode', 'establishment'],
           }
         );
+
+        // Add place_changed listener
+        sourceAutocompleteRef.current.addListener('place_changed', () => {
+          const place = sourceAutocompleteRef.current.getPlace();
+          if (place && place.formatted_address) {
+            setSource(place.formatted_address);
+          }
+        });
 
         // Prevent form submission on enter
         sourceInputRef.current.addEventListener('keydown', (e) => {
@@ -103,8 +118,8 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     // Setup destination autocomplete
     if (destInputRef.current) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const autocomplete = new (window as any).google.maps.places.Autocomplete(
+        // Create new autocomplete instance
+        destAutocompleteRef.current = new window.google.maps.places.Autocomplete(
           destInputRef.current,
           {
             componentRestrictions: { country: 'fi' },
@@ -112,6 +127,14 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
             types: ['geocode', 'establishment'],
           }
         );
+
+        // Add place_changed listener
+        destAutocompleteRef.current.addListener('place_changed', () => {
+          const place = destAutocompleteRef.current.getPlace();
+          if (place && place.formatted_address) {
+            setDestination(place.formatted_address);
+          }
+        });
 
         // Prevent form submission on enter
         destInputRef.current.addEventListener('keydown', (e) => {
@@ -126,11 +149,22 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     intermediateInputRefs.current.forEach((inputRef, index) => {
       if (inputRef) {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const autocomplete = new (window as any).google.maps.places.Autocomplete(inputRef, {
-            componentRestrictions: { country: 'fi' },
-            fields: ['formatted_address', 'geometry', 'name', 'place_id'],
-            types: ['geocode', 'establishment'],
+          // Create new autocomplete instance
+          intermediateAutocompleteRefs.current[index] = new window.google.maps.places.Autocomplete(
+            inputRef,
+            {
+              componentRestrictions: { country: 'fi' },
+              fields: ['formatted_address', 'geometry', 'name', 'place_id'],
+              types: ['geocode', 'establishment'],
+            }
+          );
+
+          // Add place_changed listener
+          intermediateAutocompleteRefs.current[index].addListener('place_changed', () => {
+            const place = intermediateAutocompleteRefs.current[index].getPlace();
+            if (place && place.formatted_address) {
+              handleIntermediatePointChange(index, place.formatted_address);
+            }
           });
 
           // Prevent form submission on enter
@@ -142,11 +176,35 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
         }
       }
     });
+
+    // Clean up function
+    return () => {
+      try {
+        // Clean up all event listeners
+        if (sourceAutocompleteRef.current) {
+          window.google.maps.event.clearInstanceListeners(sourceAutocompleteRef.current);
+        }
+        if (destAutocompleteRef.current) {
+          window.google.maps.event.clearInstanceListeners(destAutocompleteRef.current);
+        }
+        intermediateAutocompleteRefs.current.forEach((autocomplete) => {
+          if (autocomplete) {
+            window.google.maps.event.clearInstanceListeners(autocomplete);
+          }
+        });
+      } catch (error) {
+        console.error('Error cleaning up autocomplete listeners:', error);
+      }
+    };
   }, [googleLoaded, intermediatePoints.length]);
 
   // Update refs array when intermediate points change
   useEffect(() => {
     intermediateInputRefs.current = intermediateInputRefs.current.slice(
+      0,
+      intermediatePoints.length
+    );
+    intermediateAutocompleteRefs.current = intermediateAutocompleteRefs.current.slice(
       0,
       intermediatePoints.length
     );

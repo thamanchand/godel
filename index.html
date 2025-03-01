@@ -5,8 +5,18 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StopSpotter:  Search bus stops nearby</title>
-    <!-- Load Google Maps API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpt77vMNMIHfg3o8nugyMCj60hoFQJvIw&libraries=places"></script>
+    <!-- Load Google Maps API with callback -->
+    <script>
+      // Define callback function
+      function initGoogleMapsAPI() {
+        // Dispatch an event when Google Maps API is loaded
+        window.dispatchEvent(new Event('google-maps-loaded'));
+        console.log('Google Maps API loaded successfully');
+      }
+    </script>
+    <script async defer 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpt77vMNMIHfg3o8nugyMCj60hoFQJvIw&libraries=places&callback=initGoogleMapsAPI">
+    </script>
   </head>
   <body>
     <div id="root"></div>
