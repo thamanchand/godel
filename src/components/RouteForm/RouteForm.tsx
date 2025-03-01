@@ -12,6 +12,7 @@ import styles from './RouteForm.module.scss';
 interface RouteFormProps {
   onCalculateRoute: (source: string, intermediatePoints: string[], destination: string) => void;
   isCalculating: boolean;
+  route?: any; // Add route prop
 }
 
 // Example locations to help users get started - using real locations for better results
@@ -26,7 +27,7 @@ const EXAMPLE_LOCATIONS = [
   'Linnanmäki Amusement Park, Helsinki',
 ];
 
-const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }) => {
+const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating, route }) => {
   const [source, setSource] = useState<string>('');
   const [destination, setDestination] = useState<string>('');
   const [intermediatePoints, setIntermediatePoints] = useState<string[]>([]);
@@ -275,6 +276,25 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     }
   };
 
+  // Format distance for display
+  const formatDistance = (meters: number) => {
+    if (meters < 1000) {
+      return `${meters.toFixed(0)} m`;
+    }
+    return `${(meters / 1000).toFixed(1)} km`;
+  };
+
+  // Format duration for display
+  const formatDuration = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    if (hours > 0) {
+      return `${hours} h ${minutes} min`;
+    }
+    return `${minutes} min`;
+  };
+
   return (
     <div className={styles.formContainer}>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -400,6 +420,47 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
           )}
         </div>
       </form>
+
+      {/* Route Results Section */}
+      {route && (
+        <div className={styles.routeResults}>
+          <h4 className={styles.routeResultsTitle}>Route Details</h4>
+          <div className={styles.routeResultsList}>
+            {route.totalDistance && route.totalDuration ? (
+              <div className={styles.routeSummary}>
+                <div className={styles.routeDetail}>
+                  <span className={styles.routeDetailLabel}>Total Distance:</span>
+                  <span className={styles.routeDetailValue}>
+                    {formatDistance(route.totalDistance)}
+                  </span>
+                </div>
+                <div className={styles.routeDetail}>
+                  <span className={styles.routeDetailLabel}>Estimated Time:</span>
+                  <span className={styles.routeDetailValue}>
+                    {formatDuration(route.totalDuration)}
+                  </span>
+                </div>
+                {route.points && route.points.length > 0 && (
+                  <div className={styles.routePoints}>
+                    <div className={styles.routePointsTitle}>Route Points:</div>
+                    <ol className={styles.routePointsList}>
+                      {route.points.map((point: any, index: number) => (
+                        <li key={`point-${index}`} className={styles.routePoint}>
+                          {point.name || `Point ${index + 1}`}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={styles.noResults}>
+                {isCalculating ? 'Calculating route...' : 'No route information available'}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

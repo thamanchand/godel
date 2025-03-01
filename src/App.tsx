@@ -32,8 +32,12 @@ const App = () => {
       <main className={styles.main}>
         {error && <div className={styles.error}>{error}</div>}
 
-        <div className={styles.card}>
-          <RouteForm onCalculateRoute={calculateRoute} isCalculating={isCalculating} />
+        <div className={styles.sidePanel}>
+          <RouteForm
+            onCalculateRoute={calculateRoute}
+            isCalculating={isCalculating}
+            route={route}
+          />
         </div>
 
         <div className={styles.mapContainer}>

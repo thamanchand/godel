@@ -2,74 +2,71 @@
 
 // Main container
 .formContainer {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   width: 100%;
-  max-width: 100%;
-  margin-bottom: 20px;
 }
 
 // Form
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: variables.$spacing-4;
 
   h3 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 8px 0;
+    font-size: variables.$font-size-xl;
+    font-weight: variables.$font-weight-semibold;
+    color: variables.$text-primary;
+    margin: 0 0 variables.$spacing-2 0;
   }
 }
 
 // Optimization note
 .optimizationNote {
   background-color: #f0f7ff;
-  border-left: 4px solid #3b82f6;
-  padding: 12px 16px;
-  margin: 0 0 12px 0;
-  font-size: 14px;
+  border-left: 4px solid variables.$primary;
+  padding: variables.$spacing-3 variables.$spacing-4;
+  margin: 0 0 variables.$spacing-3 0;
+  font-size: variables.$font-size-sm;
   line-height: 1.5;
-  color: #334155;
-  border-radius: 4px;
+  color: variables.$text-primary;
+  border-radius: variables.$radius-sm;
 }
 
 // Input groups
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: variables.$spacing-2;
   position: relative;
 
   label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #4b5563;
+    font-size: variables.$font-size-sm;
+    font-weight: variables.$font-weight-medium;
+    color: variables.$text-secondary;
   }
 
   input {
     height: 44px;
-    padding: 0 16px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: all 0.2s ease;
+    padding: 0 variables.$spacing-4;
+    border: 1px solid variables.$border-light;
+    border-radius: variables.$radius-md;
+    font-size: variables.$font-size-base;
+    transition: variables.$transition-base;
     
     &:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      border-color: variables.$primary;
+      box-shadow: 0 0 0 3px rgba(variables.$primary, 0.1);
       outline: none;
     }
     
     &::placeholder {
-      color: #9ca3af;
+      color: variables.$text-muted;
     }
     
     &:disabled {
-      background-color: #f9fafb;
+      background-color: variables.$bg-light;
       cursor: not-allowed;
     }
   }
@@ -79,13 +76,13 @@
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: variables.$spacing-2;
   position: relative;
   
   label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #4b5563;
+    font-size: variables.$font-size-sm;
+    font-weight: variables.$font-weight-medium;
+    color: variables.$text-secondary;
   }
   
   &:focus-within {
@@ -96,30 +93,30 @@
 // Input with remove button
 .inputWithButton {
   display: flex;
-  gap: 8px;
+  gap: variables.$spacing-2;
   align-items: center;
   
   input {
     flex: 1;
     height: 44px;
-    padding: 0 16px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: all 0.2s ease;
+    padding: 0 variables.$spacing-4;
+    border: 1px solid variables.$border-light;
+    border-radius: variables.$radius-md;
+    font-size: variables.$font-size-base;
+    transition: variables.$transition-base;
     
     &:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      border-color: variables.$primary;
+      box-shadow: 0 0 0 3px rgba(variables.$primary, 0.1);
       outline: none;
     }
     
     &::placeholder {
-      color: #9ca3af;
+      color: variables.$text-muted;
     }
     
     &:disabled {
-      background-color: #f9fafb;
+      background-color: variables.$bg-light;
       cursor: not-allowed;
     }
   }
@@ -128,8 +125,8 @@
 // Button group
 .buttonGroup {
   display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  gap: variables.$spacing-3;
+  margin-top: variables.$spacing-2;
   
   @media (max-width: 480px) {
     flex-direction: column;
@@ -141,20 +138,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background-color: #f3f4f6;
-  color: #4b5563;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 500;
+  gap: variables.$spacing-1;
+  background-color: variables.$gray-100;
+  color: variables.$text-secondary;
+  border: 1px solid variables.$border-light;
+  border-radius: variables.$radius-md;
+  padding: variables.$spacing-2 variables.$spacing-4;
+  font-size: variables.$font-size-sm;
+  font-weight: variables.$font-weight-medium;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: variables.$transition-base;
   align-self: flex-start;
   
   &:hover {
-    background-color: #e5e7eb;
+    background-color: variables.$gray-200;
   }
   
   &:disabled {
@@ -164,8 +161,8 @@
 
   &::before {
     content: "+";
-    font-size: 16px;
-    margin-right: 4px;
+    font-size: variables.$font-size-base;
+    margin-right: variables.$spacing-1;
   }
 }
 
@@ -174,15 +171,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f3f4f6;
-  color: #ef4444;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background-color: variables.$gray-100;
+  color: variables.$danger;
+  border: 1px solid variables.$border-light;
+  border-radius: variables.$radius-md;
   width: 44px;
   height: 44px;
   flex-shrink: 0;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: variables.$transition-base;
   
   &:hover {
     background-color: #fee2e2;
@@ -200,23 +197,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #3b82f6;
+  background-color: variables.$primary;
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-size: 15px;
-  font-weight: 500;
+  border-radius: variables.$radius-md;
+  padding: variables.$spacing-3 variables.$spacing-6;
+  font-size: variables.$font-size-base;
+  font-weight: variables.$font-weight-medium;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: variables.$transition-base;
   flex: 1;
   
   &:hover {
-    background-color: #2563eb;
+    background-color: variables.$primary-dark;
   }
   
   &:disabled {
-    background-color: #93c5fd;
+    background-color: variables.$primary-light;
     cursor: not-allowed;
   }
 }
@@ -226,23 +223,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #10b981;
+  background-color: variables.$secondary;
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-size: 15px;
-  font-weight: 500;
+  border-radius: variables.$radius-md;
+  padding: variables.$spacing-3 variables.$spacing-6;
+  font-size: variables.$font-size-base;
+  font-weight: variables.$font-weight-medium;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: variables.$transition-base;
   flex: 1;
   
   &:hover {
-    background-color: #059669;
+    background-color: variables.$secondary-dark;
   }
   
   &:disabled {
-    background-color: #a7f3d0;
+    background-color: variables.$secondary-light;
     cursor: not-allowed;
   }
 }
@@ -251,121 +248,218 @@
 .errorMessage {
   background-color: #fee2e2;
   color: #b91c1c;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  border-left: 4px solid #ef4444;
+  padding: variables.$spacing-3 variables.$spacing-4;
+  border-radius: variables.$radius-md;
+  margin-bottom: variables.$spacing-4;
+  font-size: variables.$font-size-sm;
+  border-left: 4px solid variables.$danger;
 }
 
 // Examples section
 .examplesSection {
-  margin-top: 20px;
-  border-top: 1px solid #e5e7eb;
-  padding-top: 20px;
+  margin-top: variables.$spacing-5;
+  border-top: 1px solid variables.$border-light;
+  padding-top: variables.$spacing-5;
 }
 
 // Examples toggle button
 .examplesToggle {
   background-color: transparent;
-  color: #4b5563;
+  color: variables.$text-secondary;
   border: none;
   padding: 0;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: variables.$font-size-sm;
+  font-weight: variables.$font-weight-medium;
   cursor: pointer;
   text-decoration: underline;
-  transition: color 0.2s ease;
+  transition: variables.$transition-base;
   
   &:hover {
-    color: #3b82f6;
+    color: variables.$primary;
   }
 }
 
 // Examples list
 .examplesList {
-  margin-top: 16px;
+  margin-top: variables.$spacing-4;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: variables.$spacing-3;
 }
 
 // Examples hint
 .examplesHint {
-  font-size: 13px;
-  color: #6b7280;
-  margin: 0 0 8px 0;
+  font-size: variables.$font-size-xs;
+  color: variables.$text-muted;
+  margin: 0 0 variables.$spacing-2 0;
   font-style: italic;
 }
 
 // Example item
 .exampleItem {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 12px 16px;
+  background-color: variables.$bg-light;
+  border: 1px solid variables.$border-light;
+  border-radius: variables.$radius-md;
+  padding: variables.$spacing-3 variables.$spacing-4;
   
   span {
     display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #4b5563;
-    margin-bottom: 8px;
+    font-size: variables.$font-size-sm;
+    font-weight: variables.$font-weight-medium;
+    color: variables.$text-secondary;
+    margin-bottom: variables.$spacing-2;
   }
 }
 
 // Example buttons
 .exampleButtons {
   display: flex;
-  gap: 8px;
+  gap: variables.$spacing-2;
   flex-wrap: wrap;
   
   button {
-    background-color: #f3f4f6;
-    color: #4b5563;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
+    background-color: variables.$gray-100;
+    color: variables.$text-secondary;
+    border: 1px solid variables.$border-light;
+    border-radius: variables.$radius-sm;
+    padding: variables.$spacing-1 variables.$spacing-2;
+    font-size: variables.$font-size-xs;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: variables.$transition-base;
     
     &:hover {
-      background-color: #e5e7eb;
+      background-color: variables.$gray-200;
     }
   }
+}
+
+// Route results section
+.routeResults {
+  margin-top: variables.$spacing-6;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.routeResultsTitle {
+  font-size: variables.$font-size-lg;
+  font-weight: variables.$font-weight-semibold;
+  color: variables.$text-primary;
+  margin: 0 0 variables.$spacing-3 0;
+  padding-bottom: variables.$spacing-2;
+  border-bottom: 1px solid variables.$border-light;
+}
+
+.routeResultsList {
+  flex: 1;
+  overflow-y: auto;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+    &-track { background: transparent; }
+    &-thumb {
+      background-color: rgba(variables.$text-secondary, 0.3);
+      border-radius: 4px;
+    }
+  }
+}
+
+.routeSummary {
+  background-color: variables.$bg-light;
+  border-radius: variables.$radius-md;
+  padding: variables.$spacing-4;
+  margin-bottom: variables.$spacing-4;
+  border: 1px solid variables.$border-light;
+}
+
+.routeDetail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: variables.$spacing-2;
+  padding-bottom: variables.$spacing-2;
+  border-bottom: 1px solid variables.$border-light;
+  
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.routeDetailLabel {
+  font-weight: variables.$font-weight-medium;
+  color: variables.$text-secondary;
+}
+
+.routeDetailValue {
+  font-weight: variables.$font-weight-semibold;
+  color: variables.$text-primary;
+}
+
+.routePoints {
+  margin-top: variables.$spacing-4;
+}
+
+.routePointsTitle {
+  font-weight: variables.$font-weight-medium;
+  color: variables.$text-secondary;
+  margin-bottom: variables.$spacing-2;
+}
+
+.routePointsList {
+  margin: 0;
+  padding-left: variables.$spacing-5;
+}
+
+.routePoint {
+  margin-bottom: variables.$spacing-2;
+  color: variables.$text-primary;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.noResults {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  color: variables.$text-muted;
+  font-size: variables.$font-size-sm;
+  text-align: center;
+  padding: variables.$spacing-4;
 }
 
 /* Google Places Autocomplete custom styling */
 :global {
   .pac-container {
     z-index: 9999 !important;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: variables.$radius-md;
+    border: 1px solid variables.$border-light;
+    box-shadow: variables.$shadow-md;
     font-family: inherit;
-    margin-top: 4px;
+    margin-top: variables.$spacing-1;
     overflow: hidden;
     
     .pac-item {
-      padding: 10px 16px;
+      padding: variables.$spacing-2 variables.$spacing-4;
       cursor: pointer;
       
       &:hover {
-        background-color: #f3f4f6;
+        background-color: variables.$gray-100;
       }
     }
   }
 }
 
 :global(.pac-item-query) {
-  font-size: 14px;
-  color: #1f2937;
+  font-size: variables.$font-size-sm;
+  color: variables.$text-primary;
 }
 
 :global(.pac-matched) {
-  font-weight: 600;
-  color: #3b82f6;
+  font-weight: variables.$font-weight-semibold;
+  color: variables.$primary;
 }
 
 :global(.pac-logo:after) {

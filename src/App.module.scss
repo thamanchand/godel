@@ -115,6 +115,19 @@
   }
 }
 
+.sidePanel {
+  background-color: variables.$bg-white;
+  border-radius: variables.$radius-lg;
+  box-shadow: variables.$shadow-md;
+  padding: variables.$spacing-6;
+  height: 100%;
+  overflow-y: auto;
+  
+  @media (max-width: variables.$breakpoint-md) {
+    padding: variables.$spacing-4;
+  }
+}
+
 .mapContainer {
   height: 100%;
   overflow: hidden;
@@ -244,12 +257,4 @@
 
 .textSmall {
   font-size: variables.$font-size-sm;
-}
-
-.card {
-  background-color: variables.$bg-white;
-  border-radius: variables.$radius-lg;
-  box-shadow: variables.$shadow-md;
-  padding: variables.$spacing-6;
-  height: 100%;
 }
