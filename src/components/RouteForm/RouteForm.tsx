@@ -31,8 +31,8 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   const [source, setSource] = useState<string>('');
   const [destination, setDestination] = useState<string>('');
   const [intermediatePoints, setIntermediatePoints] = useState<string[]>([]);
-  const [showExamples, _setShowExamples] = useState<boolean>(true); // Show examples by default
-  const [_formError, setFormError] = useState<string | null>(null); // Prefix with _ to indicate it's intentionally unused
+  const [showExamples] = useState<boolean>(true); // Show examples by default
+  const [formError, setFormError] = useState<string | null>(null);
   const [googleLoaded, setGoogleLoaded] = useState<boolean>(false);
 
   // Refs for input elements
@@ -278,7 +278,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
           efficiency.
         </div>
 
-        {_formError && <div className={styles.errorMessage}>{_formError}</div>}
+        {formError && <div className={styles.errorMessage}>{formError}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
