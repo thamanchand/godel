@@ -39,6 +39,7 @@
 }
 
 .routeLegend {
+  overflow-y: auto;
   position: absolute;
   top: 20px;
   right: 20px;
@@ -170,56 +171,6 @@
   }
 }
 
-.markerSymbol {
-  width: 16px;
-  height: 16px;
-  border-radius: 50% 50% 50% 0;
-  transform: rotate(-45deg);
-  margin-right: 8px;
-  flex-shrink: 0;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  &::after {
-    content: '';
-    width: 12px;
-    height: 12px;
-    margin: 2px 0 0 2px;
-    background: white;
-    position: absolute;
-    border-radius: 50%;
-  }
-  
-  i {
-    transform: rotate(45deg);
-    position: relative;
-    z-index: 2;
-    font-size: 10px;
-  }
-}
-
-.sourceSymbol {
-  background-color: #FF5733;
-  
-  i {
-    color: #FF5733;
-  }
-}
-
-.intermediateSymbol {
-  background-color: #33A8FF;
-}
-
-.destinationSymbol {
-  background-color: #32CD32;
-  
-  i {
-    color: #32CD32;
-  }
-}
-
 /* Vertical route sequence in legend */
 .verticalRouteSequence {
   display: flex;
@@ -241,9 +192,29 @@
   position: relative;
   z-index: 10;
   
+  i {
+    margin-right: 8px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+  }
+  
   span {
     margin-right: 8px;
   }
+}
+
+.sourceIcon {
+  color: #FF5733;
+}
+
+.destinationIcon {
+  color: #32CD32;
+}
+
+.intermediateIcon {
+  color: #33A8FF;
+  font-size: 12px !important;
 }
 
 .routePointName {
@@ -291,4 +262,18 @@
   justify-content: center;
   font-size: 12px;
   color: #666;
+  gap: 4px;
+}
+
+.segmentStat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  
+  i {
+    color: #FF5733;
+    font-size: 12px;
+    width: 14px;
+    text-align: center;
+  }
 } 

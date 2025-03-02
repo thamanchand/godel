@@ -270,18 +270,13 @@ const Map = ({
                         >
                           {/* Point marker */}
                           <div className={styles.routePointMarker}>
-                            <span
-                              className={`${styles.markerSymbol} ${
-                                isSource
-                                  ? styles.sourceSymbol
-                                  : isDestination
-                                    ? styles.destinationSymbol
-                                    : styles.intermediateSymbol
-                              }`}
-                            >
-                              {isSource && <i className="fa fa-home"></i>}
-                              {isDestination && <i className="fa fa-flag"></i>}
-                            </span>
+                            {isSource && <i className={`fa fa-home ${styles.sourceIcon}`}></i>}
+                            {isDestination && (
+                              <i className={`fa fa-flag ${styles.destinationIcon}`}></i>
+                            )}
+                            {!isSource && !isDestination && (
+                              <i className={`fa fa-circle ${styles.intermediateIcon}`}></i>
+                            )}
                             <span className={styles.routePointName}>{point.name}</span>
                           </div>
 
@@ -298,8 +293,14 @@ const Map = ({
                               {/* Segment info */}
                               {connectingSegment && (
                                 <div className={styles.segmentInfo}>
-                                  <span>{connectingSegment.distance.toFixed(1)} km</span>
-                                  <span>{Math.round(connectingSegment.duration)} min</span>
+                                  <div className={styles.segmentStat}>
+                                    <i className="fa fa-road"></i>
+                                    <span>{connectingSegment.distance.toFixed(1)} km</span>
+                                  </div>
+                                  <div className={styles.segmentStat}>
+                                    <i className="fa fa-clock"></i>
+                                    <span>{Math.round(connectingSegment.duration)} min</span>
+                                  </div>
                                 </div>
                               )}
                             </div>
