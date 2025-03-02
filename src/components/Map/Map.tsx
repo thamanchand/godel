@@ -32,6 +32,34 @@ interface MapProps {
   isCalculating?: boolean;
 }
 
+// Map tile layers
+const MAP_STYLES = {
+  light: {
+    name: 'Light',
+    url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+  },
+  dark: {
+    name: 'Dark',
+    url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+  },
+  satellite: {
+    name: 'Satellite',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution:
+      'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+  },
+  terrain: {
+    name: 'Terrain',
+    url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png',
+    attribution:
+      'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  },
+};
+
 // Custom marker icons
 const sourceIcon = L.divIcon({
   className: `${styles.customMarker} ${styles.sourceMarker}`,
@@ -107,8 +135,9 @@ const Map = ({
 }: MapProps) => {
   const routePoints = route?.points || [];
   const routeSegments = route?.segments || [];
-  const [, setMapReady] = useState(false);
-  const [, setMapInstance] = useState<L.Map | null>(null);
+  const [_mapReady, setMapReady] = useState(false);
+  const [_mapInstance, setMapInstance] = useState<L.Map | null>(null);
+  const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('light');
 
   const handleMapReady = (map: L.Map) => {
     setMapInstance(map);
@@ -125,10 +154,7 @@ const Map = ({
         zoomControl={false}
         attributionControl={false}
       >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
+        <TileLayer url={MAP_STYLES[mapStyle].url} attribution={MAP_STYLES[mapStyle].attribution} />
 
         <ZoomControl position="bottomright" />
         <MapController onPositionChange={onPositionChange} onMapReady={handleMapReady} />
@@ -140,14 +166,27 @@ const Map = ({
             {routeSegments.map((segment, index) => {
               if (!segment.path || segment.path.length < 2) return null;
 
+              const color = SEGMENT_COLORS[index % SEGMENT_COLORS.length];
+
               return (
-                <Polyline
-                  key={`segment-${index}`}
-                  positions={segment.path}
-                  color={SEGMENT_COLORS[index % SEGMENT_COLORS.length]}
-                  weight={4}
-                  opacity={0.9}
-                />
+                <>
+                  {/* Shadow effect */}
+                  <Polyline
+                    key={`segment-shadow-${index}`}
+                    positions={segment.path}
+                    color="rgba(0, 0, 0, 0.5)"
+                    weight={10}
+                    opacity={0.5}
+                  />
+                  {/* Main route line */}
+                  <Polyline
+                    key={`segment-${index}`}
+                    positions={segment.path}
+                    color={color}
+                    weight={6}
+                    opacity={1.0}
+                  />
+                </>
               );
             })}
 
@@ -249,6 +288,19 @@ const Map = ({
           </>
         )}
       </MapContainer>
+
+      {/* Map style selector */}
+      <div className={styles.mapStyleSelector}>
+        {Object.entries(MAP_STYLES).map(([key, value]) => (
+          <button
+            key={key}
+            className={`${styles.mapStyleButton} ${mapStyle === key ? styles.active : ''}`}
+            onClick={() => setMapStyle(key as keyof typeof MAP_STYLES)}
+          >
+            {value.name}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
