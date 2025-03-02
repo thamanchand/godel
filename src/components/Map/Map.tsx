@@ -71,6 +71,18 @@ const SEGMENT_COLORS = [
   '#e6b200', // Darker Gold
 ];
 
+// Pattern options for route segments - simplified to match the provided image
+const SEGMENT_PATTERNS = [
+  { dashArray: '10, 5', weight: 4 }, // Dashed line
+  { dashArray: '1, 10', weight: 4 }, // Dotted line
+  { dashArray: '10, 5, 1, 5', weight: 4 }, // Dash-dot line
+  { dashArray: '10, 5, 1, 5, 1, 5', weight: 4 }, // Dash-dot-dot line
+  { dashArray: '15, 5', weight: 4 }, // Long dash
+  { dashArray: '5, 5', weight: 4 }, // Short dash
+  { dashArray: '15, 10, 5, 10, 1, 10', weight: 4 }, // Complex pattern
+  { dashArray: '20, 5, 1, 5, 1, 5', weight: 4 }, // Another complex pattern
+];
+
 // Component to handle map events and initialization
 const MapController = ({
   onPositionChange,
@@ -371,9 +383,12 @@ const Map = ({
                   key={`segment-${index}`}
                   positions={validPath}
                   color={SEGMENT_COLORS[index % SEGMENT_COLORS.length]}
-                  weight={5}
-                  opacity={0.7}
+                  weight={SEGMENT_PATTERNS[index % SEGMENT_PATTERNS.length].weight}
+                  dashArray={SEGMENT_PATTERNS[index % SEGMENT_PATTERNS.length].dashArray}
+                  opacity={0.9}
                   smoothFactor={1}
+                  lineCap="round"
+                  lineJoin="round"
                 >
                   <Popup>
                     <div>
@@ -437,8 +452,8 @@ const Map = ({
               );
             })}
 
-            {/* Route summary */}
-            {route && (
+            {/* Route summary - remove this since we're showing it in the legend header */}
+            {/* {route && (
               <div className={styles.routeSummary}>
                 <p>
                   <strong>Total Distance:</strong> {route.distance} km
@@ -447,46 +462,93 @@ const Map = ({
                   <strong>Estimated Time:</strong> {route.duration} minutes
                 </p>
               </div>
-            )}
+            )} */}
 
             {/* Route legend */}
             {routeSegments.length > 1 && (
               <div className={styles.routeLegend}>
-                <h4>Route Segments</h4>
+                <div className={styles.legendHeader}>
+                  <h4>Route Path</h4>
+                  {route && (
+                    <span>
+                      <strong>Total:</strong> {route.distance} km · {route.duration} min
+                    </span>
+                  )}
+                </div>
                 <div className={styles.legendItems}>
-                  {routeSegments.map((segment, index) => (
-                    <div key={`legend-${index}`} className={styles.legendItem}>
-                      <span
-                        className={styles.colorBox}
-                        style={{ backgroundColor: SEGMENT_COLORS[index % SEGMENT_COLORS.length] }}
-                      ></span>
-                      <span className={styles.legendText}>
-                        {segment.from.name} → {segment.to.name}
-                      </span>
-                    </div>
-                  ))}
+                  <div className={styles.verticalRouteSequence}>
+                    {/* Render all route points with their vertical lines */}
+                    {routePoints.map((point, pointIndex) => {
+                      const isSource = pointIndex === 0;
+                      const isDestination = pointIndex === routePoints.length - 1;
+
+                      // For styling, always use the index of the point to get a consistent color
+                      const segmentIndex = pointIndex;
+                      const color = SEGMENT_COLORS[segmentIndex % SEGMENT_COLORS.length];
+
+                      // Find the segment that connects this point to the next point (for distance info)
+                      const nextPoint =
+                        pointIndex < routePoints.length - 1 ? routePoints[pointIndex + 1] : null;
+                      const connectingSegment = nextPoint
+                        ? routeSegments.find(
+                            (seg) =>
+                              (seg.from.name === point.name && seg.to.name === nextPoint.name) ||
+                              (seg.to.name === point.name && seg.from.name === nextPoint.name)
+                          )
+                        : null;
+
+                      return (
+                        <div
+                          key={`route-point-${pointIndex}`}
+                          className={styles.verticalRoutePoint}
+                        >
+                          {/* Render the point marker */}
+                          <div className={styles.routePointMarker}>
+                            <span
+                              className={`${styles.markerSymbol} ${
+                                isSource
+                                  ? styles.sourceSymbol
+                                  : isDestination
+                                    ? styles.destinationSymbol
+                                    : styles.intermediateSymbol
+                              }`}
+                            ></span>
+                            <span className={styles.routePointName}>{point.name}</span>
+                          </div>
+
+                          {/* Add vertical line for all points except the destination */}
+                          {!isDestination && (
+                            <div className={styles.verticalRouteLine}>
+                              <div
+                                className={styles.verticalRouteSegment}
+                                style={{
+                                  backgroundColor: color,
+                                }}
+                              >
+                                {/* Connection dot at the top */}
+                              </div>
+
+                              <div className={styles.segmentInfo}>
+                                {connectingSegment && (
+                                  <>
+                                    <span className={styles.segmentDistance}>
+                                      {connectingSegment.distance.toFixed(1)} km
+                                    </span>
+                                    <span className={styles.segmentTime}>
+                                      {Math.round(connectingSegment.duration)} min
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
-
-            {/* Marker legend */}
-            <div className={styles.markerLegend}>
-              <h4>Map Markers</h4>
-              <div className={styles.legendItems}>
-                <div className={styles.legendItem}>
-                  <span className={`${styles.markerSymbol} ${styles.sourceSymbol}`}></span>
-                  <span className={styles.legendText}>Source</span>
-                </div>
-                <div className={styles.legendItem}>
-                  <span className={`${styles.markerSymbol} ${styles.intermediateSymbol}`}></span>
-                  <span className={styles.legendText}>Intermediate Point</span>
-                </div>
-                <div className={styles.legendItem}>
-                  <span className={`${styles.markerSymbol} ${styles.destinationSymbol}`}></span>
-                  <span className={styles.legendText}>Destination</span>
-                </div>
-              </div>
-            </div>
           </>
         )}
       </MapContainer>

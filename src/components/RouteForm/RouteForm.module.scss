@@ -56,7 +56,7 @@
 .inputGroup {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+  margin-bottom: 0.2rem;
   
   label {
     font-size: $font-size-sm;
@@ -66,7 +66,7 @@
   }
   
   input {
-    padding: 0.5rem;
+    padding: 0.4rem;
     border: 1px solid $border-color;
     border-radius: $border-radius-sm;
     font-size: $font-size-base;
@@ -118,7 +118,7 @@
 .buttonGroup {
   display: flex;
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 // Add button
@@ -127,11 +127,11 @@
   color: $white;
   border: none;
   border-radius: $border-radius-md;
-  padding: 0.75rem;
+  padding: 0.5rem;
   font-size: $font-size-base;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-bottom: 1rem;
+  margin-bottom: 0.2rem;
   
   &:hover {
     background-color: $secondary-600;

@@ -52,31 +52,6 @@
   }
 }
 
-.routeSummary {
-  position: absolute;
-  bottom: variables.$spacing-5;
-  right: variables.$spacing-5;
-  background-color: white;
-  padding: variables.$spacing-3 variables.$spacing-4;
-  border-radius: variables.$radius-md;
-  box-shadow: variables.$shadow-lg;
-  z-index: 1000;
-  max-width: 280px;
-  font-size: variables.$font-size-sm;
-  border-left: 4px solid variables.$primary;
-  pointer-events: none; /* Allow clicks to pass through */
-
-  p {
-    margin: variables.$spacing-2 0;
-    color: variables.$text-primary;
-  }
-  
-  strong {
-    color: variables.$primary;
-    font-weight: variables.$font-weight-semibold;
-  }
-}
-
 .routeLegend {
   position: absolute;
   top: variables.$spacing-5;
@@ -87,22 +62,44 @@
   box-shadow: variables.$shadow-lg;
   z-index: 1000;
   max-width: 320px;
+  width: 280px;
   font-size: variables.$font-size-sm;
   pointer-events: auto; /* Allow interaction with the legend */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - variables.$spacing-10);
+  overflow: hidden;
+  border-left: 4px solid variables.$primary;
 
-  h4 {
-    margin: 0 0 variables.$spacing-3 0;
-    font-size: variables.$font-size-base;
-    color: variables.$text-primary;
-    border-bottom: 1px solid variables.$border-light;
-    padding-bottom: variables.$spacing-2;
-    font-weight: variables.$font-weight-semibold;
+  .legendHeader {
+    margin-bottom: variables.$spacing-3;
+    border-color: 1px solid variables.$primary;
+    flex-direction: row;
+    word-wrap: break-word;
+    h4 {
+      margin: 0 0 variables.$spacing-1 0;
+      font-size: variables.$font-size-base;
+      color: variables.$text-primary;
+      font-weight: variables.$font-weight-semibold;
+    }
+    
+    .routeTotals {
+      font-size: variables.$font-size-sm;
+      color: variables.$text-secondary;
+      padding-bottom: variables.$spacing-2;
+      border-bottom: 1px solid variables.$border-light;
+      
+      strong {
+        color: variables.$text-primary;
+        font-weight: variables.$font-weight-medium;
+      }
+    }
   }
 
   .legendItems {
-    max-height: 220px;
     overflow-y: auto;
     padding-right: variables.$spacing-2;
+    flex-grow: 1;
     
     /* Scrollbar styling */
     &::-webkit-scrollbar {
@@ -141,6 +138,18 @@
   border-radius: variables.$radius-sm;
   margin-right: variables.$spacing-2;
   flex-shrink: 0;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    transform: translateY(-50%);
+    border-radius: 1.5px;
+  }
 }
 
 .legendText {
@@ -418,4 +427,92 @@
 :global(.pac-matched) {
   font-weight: variables.$font-weight-semibold !important;
   color: variables.$primary !important;
+}
+
+/* Vertical route sequence in legend */
+.verticalRouteSequence {
+  display: flex;
+  flex-direction: column;
+  padding: variables.$spacing-2 0;
+  position: relative;
+}
+
+.verticalRoutePoint {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.routePointMarker {
+  display: flex;
+  align-items: center;
+  margin-bottom: variables.$spacing-1;
+  position: relative;
+  z-index: 10;
+  
+  span {
+    margin-right: variables.$spacing-2;
+  }
+}
+
+.routePointName {
+  font-weight: variables.$font-weight-medium;
+  color: variables.$text-primary;
+  font-size: variables.$font-size-sm;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.verticalRouteLine {
+  display: flex;
+  padding-left: 8px;
+  margin-bottom: variables.$spacing-3;
+  height: 60px;
+  position: relative;
+}
+
+.verticalRouteSegment {
+  width: 4px;
+  height: 100%;
+  margin-right: variables.$spacing-3;
+  position: relative;
+  z-index: 5;
+
+}
+
+.connectionDot {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 50%;
+  left: -10px;
+  border: 4px solid;
+  box-shadow: 0 0 0 3px white, 0 0 12px rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  pointer-events: none;
+}
+
+.segmentInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: variables.$font-size-xs;
+  color: variables.$text-secondary;
+}
+
+.segmentDistance, .segmentTime {
+  margin-bottom: variables.$spacing-1;
+  
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 1px;
+    background-color: variables.$gray-400;
+    margin-right: variables.$spacing-1;
+    vertical-align: middle;
+  }
 } 
