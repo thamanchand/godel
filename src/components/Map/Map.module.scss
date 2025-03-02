@@ -1,281 +1,44 @@
-@use "../../styles/variables" as variables;
-
 .mapContainer {
   position: relative;
   height: 100%;
   width: 100%;
-  border-radius: variables.$radius-lg;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: variables.$shadow-md;
-  z-index: 0; /* Ensure proper stacking context */
-  touch-action: none; /* Prevent browser handling of touch events */
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: variables.$spacing-6;
-  text-align: center;
-  font-size: variables.$font-size-lg;
-  color: variables.$text-secondary;
-  backdrop-filter: blur(4px);
-  pointer-events: none; /* Allow clicks to pass through to the map */
-}
-
-.loadingOverlay {
-  background-color: rgba(255, 255, 255, 0.95);
-  flex-direction: column;
-  gap: variables.$spacing-5;
-  pointer-events: auto; /* Block clicks when loading */
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(0, 0, 0, 0.05);
-  border-radius: 50%;
-  border-top-color: variables.$primary;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .routeLegend {
   position: absolute;
-  top: variables.$spacing-5;
-  right: variables.$spacing-5;
+  top: 20px;
+  right: 20px;
   background-color: white;
-  padding: variables.$spacing-4;
-  border-radius: variables.$radius-md;
-  box-shadow: variables.$shadow-lg;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   max-width: 320px;
   width: 280px;
-  font-size: variables.$font-size-sm;
-  pointer-events: auto; /* Allow interaction with the legend */
+  font-size: 14px;
   display: flex;
   flex-direction: column;
-  max-height: calc(100% - variables.$spacing-10);
+  max-height: calc(100% - 40px);
   overflow: hidden;
-  border-left: 4px solid variables.$primary;
+  border-left: 4px solid #00509d;
 
   .legendHeader {
-    margin-bottom: variables.$spacing-3;
-    border-color: 1px solid variables.$primary;
-    flex-direction: row;
-    word-wrap: break-word;
-    h4 {
-      margin: 0 0 variables.$spacing-1 0;
-      font-size: variables.$font-size-base;
-      color: variables.$text-primary;
-      font-weight: variables.$font-weight-semibold;
-    }
+    margin-bottom: 12px;
     
-    .routeTotals {
-      font-size: variables.$font-size-sm;
-      color: variables.$text-secondary;
-      padding-bottom: variables.$spacing-2;
-      border-bottom: 1px solid variables.$border-light;
-      
-      strong {
-        color: variables.$text-primary;
-        font-weight: variables.$font-weight-medium;
-      }
+    h4 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      font-weight: 600;
     }
   }
 
   .legendItems {
     overflow-y: auto;
-    padding-right: variables.$spacing-2;
+    padding-right: 8px;
     flex-grow: 1;
-    
-    /* Scrollbar styling */
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    &::-webkit-scrollbar-track {
-      background: variables.$gray-100;
-      border-radius: 3px;
-    }
-    
-    &::-webkit-scrollbar-thumb {
-      background: variables.$gray-300;
-      border-radius: 3px;
-    }
-    
-    &::-webkit-scrollbar-thumb:hover {
-      background: variables.$gray-400;
-    }
-  }
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  margin-bottom: variables.$spacing-2;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.colorBox {
-  width: 16px;
-  height: 16px;
-  border-radius: variables.$radius-sm;
-  margin-right: variables.$spacing-2;
-  flex-shrink: 0;
-  position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 3px;
-    transform: translateY(-50%);
-    border-radius: 1.5px;
-  }
-}
-
-.legendText {
-  font-size: variables.$font-size-sm;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: variables.$text-secondary;
-}
-
-.mapInstructions {
-  position: absolute;
-  bottom: variables.$spacing-5;
-  left: variables.$spacing-5;
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: variables.$spacing-3 variables.$spacing-4;
-  border-radius: variables.$radius-md;
-  font-size: variables.$font-size-xs;
-  color: variables.$text-secondary;
-  z-index: 1000;
-  pointer-events: none;
-  transition: all 0.3s ease;
-  opacity: 0.9;
-  box-shadow: variables.$shadow-sm;
-  backdrop-filter: blur(4px);
-  
-  &:hover {
-    opacity: 1;
-  }
-  
-  p {
-    margin: 0;
-  }
-}
-
-/* Make sure the map container takes full height */
-:global(.leaflet-container) {
-  height: 100% !important;
-  width: 100% !important;
-  z-index: 0 !important; /* Lower z-index to prevent conflicts */
-  
-  /* Fix for touch devices */
-  &.leaflet-touch {
-    .leaflet-control-zoom {
-      border: none !important;
-    }
-  }
-}
-
-/* Style the zoom controls */
-:global(.leaflet-control-zoom) {
-  border: none !important;
-  box-shadow: variables.$shadow-md !important;
-  margin: variables.$spacing-4 !important;
-  z-index: 800 !important; /* Lower z-index to prevent conflicts */
-  border-radius: variables.$radius-md !important;
-  overflow: hidden;
-  pointer-events: auto !important; /* Ensure zoom controls are clickable */
-}
-
-:global(.leaflet-control-zoom-in),
-:global(.leaflet-control-zoom-out) {
-  background-color: white !important;
-  color: variables.$text-primary !important;
-  width: 40px !important;
-  height: 40px !important;
-  line-height: 40px !important;
-  font-size: 20px !important;
-  transition: all 0.2s ease !important;
-  pointer-events: auto !important; /* Ensure zoom buttons are clickable */
-  
-  &:hover {
-    background-color: variables.$gray-100 !important;
-    color: variables.$primary !important;
-  }
-}
-
-/* Fix for zoom control on touch devices */
-:global(.leaflet-touch .leaflet-control-zoom-in),
-:global(.leaflet-touch .leaflet-control-zoom-out) {
-  font-size: 22px !important;
-  line-height: 30px !important;
-}
-
-/* Style the popups */
-:global(.leaflet-popup-content-wrapper) {
-  border-radius: variables.$radius-md !important;
-  padding: variables.$spacing-1 !important;
-  box-shadow: variables.$shadow-md !important;
-}
-
-:global(.leaflet-popup-content) {
-  margin: variables.$spacing-3 variables.$spacing-4 !important;
-  line-height: 1.5 !important;
-  font-size: variables.$font-size-sm !important;
-  color: variables.$text-primary !important;
-}
-
-:global(.leaflet-popup-tip) {
-  background-color: white !important;
-  box-shadow: variables.$shadow-md !important;
-}
-
-/* Ensure all map controls are clickable */
-:global(.leaflet-control) {
-  pointer-events: auto !important;
-}
-
-/* Fix for Safari and iOS */
-:global(.leaflet-safari .leaflet-tile) {
-  image-rendering: -webkit-optimize-contrast;
-}
-
-.markerIcon {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: variables.$shadow-md;
-  
-  img {
-    width: 22px;
-    height: 22px;
   }
 }
 
@@ -294,7 +57,7 @@
     left: 50%;
     top: 50%;
     margin: -15px 0 0 -15px;
-    box-shadow: variables.$shadow-md;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     
     &::after {
       content: '';
@@ -310,19 +73,19 @@
 
 .sourceMarker {
   :global(.marker-pin) {
-    background: variables.$primary; // Polynesian Blue
+    background: #00509d;
   }
 }
 
 .destinationMarker {
   :global(.marker-pin) {
-    background: variables.$secondary; // Mikado Yellow
+    background: #fdc500;
   }
 }
 
 .intermediateMarker {
   :global(.marker-pin) {
-    background: variables.$primary-light; // Lighter Polynesian Blue
+    background: #0070db;
     width: 24px;
     height: 24px;
     margin: -12px 0 0 -12px;
@@ -335,35 +98,12 @@
   }
 }
 
-.markerLegend {
-  position: absolute;
-  top: variables.$spacing-5;
-  left: variables.$spacing-5;
-  background-color: white;
-  padding: variables.$spacing-4;
-  border-radius: variables.$radius-md;
-  box-shadow: variables.$shadow-lg;
-  z-index: 1000;
-  max-width: 250px;
-  font-size: variables.$font-size-sm;
-  pointer-events: auto; /* Allow interaction with the legend */
-
-  h4 {
-    margin: 0 0 variables.$spacing-3 0;
-    font-size: variables.$font-size-base;
-    color: variables.$text-primary;
-    border-bottom: 1px solid variables.$border-light;
-    padding-bottom: variables.$spacing-2;
-    font-weight: variables.$font-weight-semibold;
-  }
-}
-
 .markerSymbol {
   width: 16px;
   height: 16px;
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
-  margin-right: variables.$spacing-2;
+  margin-right: 8px;
   flex-shrink: 0;
   position: relative;
   
@@ -379,61 +119,22 @@
 }
 
 .sourceSymbol {
-  background-color: variables.$primary; // Polynesian Blue
+  background-color: #00509d;
 }
 
 .intermediateSymbol {
-  background-color: variables.$primary-light; // Lighter Polynesian Blue
+  background-color: #0070db;
 }
 
 .destinationSymbol {
-  background-color: variables.$secondary; // Mikado Yellow
-}
-
-/* Google Places Autocomplete styling */
-:global(.pac-container) {
-  z-index: 9999 !important; /* Ensure it appears above everything */
-  border-radius: variables.$radius-md !important;
-  box-shadow: variables.$shadow-lg !important;
-  border: 1px solid variables.$gray-300 !important;
-  margin-top: variables.$spacing-1 !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
-  pointer-events: auto !important; /* Ensure clicks are captured */
-}
-
-:global(.pac-item) {
-  padding: variables.$spacing-2 variables.$spacing-3 !important;
-  cursor: pointer !important;
-  font-size: variables.$font-size-sm !important;
-  
-  &:hover {
-    background-color: variables.$gray-100 !important;
-  }
-}
-
-:global(.pac-item-selected) {
-  background-color: rgba(variables.$primary, 0.1) !important;
-}
-
-:global(.pac-icon) {
-  margin-right: variables.$spacing-2 !important;
-}
-
-:global(.pac-item-query) {
-  font-size: variables.$font-size-sm !important;
-  color: variables.$text-primary !important;
-}
-
-:global(.pac-matched) {
-  font-weight: variables.$font-weight-semibold !important;
-  color: variables.$primary !important;
+  background-color: #fdc500;
 }
 
 /* Vertical route sequence in legend */
 .verticalRouteSequence {
   display: flex;
   flex-direction: column;
-  padding: variables.$spacing-2 0;
+  padding: 8px 0;
   position: relative;
 }
 
@@ -446,19 +147,19 @@
 .routePointMarker {
   display: flex;
   align-items: center;
-  margin-bottom: variables.$spacing-1;
+  margin-bottom: 4px;
   position: relative;
   z-index: 10;
   
   span {
-    margin-right: variables.$spacing-2;
+    margin-right: 8px;
   }
 }
 
 .routePointName {
-  font-weight: variables.$font-weight-medium;
-  color: variables.$text-primary;
-  font-size: variables.$font-size-sm;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -468,7 +169,7 @@
 .verticalRouteLine {
   display: flex;
   padding-left: 8px;
-  margin-bottom: variables.$spacing-3;
+  margin-bottom: 12px;
   height: 60px;
   position: relative;
 }
@@ -476,10 +177,9 @@
 .verticalRouteSegment {
   width: 4px;
   height: 100%;
-  margin-right: variables.$spacing-3;
+  margin-right: 12px;
   position: relative;
   z-index: 5;
-
 }
 
 .connectionDot {
@@ -499,20 +199,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-size: variables.$font-size-xs;
-  color: variables.$text-secondary;
-}
-
-.segmentDistance, .segmentTime {
-  margin-bottom: variables.$spacing-1;
-  
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 1px;
-    background-color: variables.$gray-400;
-    margin-right: variables.$spacing-1;
-    vertical-align: middle;
-  }
+  font-size: 12px;
+  color: #666;
 } 
