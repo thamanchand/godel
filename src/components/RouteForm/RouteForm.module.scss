@@ -211,6 +211,7 @@
   
   input {
     flex: 1;
+    height: 20px;
   }
 }
 
@@ -249,8 +250,8 @@
   color: $white;
   border: none;
   border-radius: $border-radius-md;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.0rem;
+  height: 2.0rem;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -441,14 +441,14 @@ function generatePermutations(
     console.log(`Optimizing route with ${arr.length} points using advanced heuristic algorithms`);
 
     // For larger sets, use multiple heuristic approaches and take the best result
-    const results = [];
+    const results: number[][] = [];
 
     // 1. Nearest neighbor starting from source
     results.push(nearestNeighborTSP(arr, distanceMatrix, sourceDistances));
 
     // 2. Nearest neighbor with different starting points (sample a few starting points)
     const sampleSize = Math.min(5, arr.length);
-    const samples = [];
+    const samples: number[] = [];
     for (let i = 0; i < sampleSize; i++) {
       samples.push(Math.floor(Math.random() * arr.length));
     }
@@ -525,10 +525,10 @@ function nearestNeighborTSP(
 
   // Find the best starting point (closest to source)
   let startIdx = 0;
-  let minDistance = sourceDistances[0];
+  let minDistance = sourceDistances[indices[0]];
   for (let i = 1; i < indices.length; i++) {
-    if (sourceDistances[i] < minDistance) {
-      minDistance = sourceDistances[i];
+    if (sourceDistances[indices[i]] < minDistance) {
+      minDistance = sourceDistances[indices[i]];
       startIdx = i;
     }
   }

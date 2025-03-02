@@ -215,7 +215,7 @@ const Map = ({
                     key={`segment-shadow-${index}`}
                     positions={segment.path}
                     color="rgba(0, 0, 0, 0.5)"
-                    weight={10}
+                    weight={4}
                     opacity={0.5}
                   />
                   {/* Main route line */}
@@ -223,7 +223,7 @@ const Map = ({
                     key={`segment-${index}`}
                     positions={segment.path}
                     color={color}
-                    weight={6}
+                    weight={4}
                     opacity={1.0}
                   />
                 </>
