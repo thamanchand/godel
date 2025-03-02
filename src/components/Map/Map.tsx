@@ -296,17 +296,7 @@ const Map = ({
                                 style={{
                                   backgroundColor: color,
                                 }}
-                              >
-                                {/* Add connection dot */}
-                                <div
-                                  className={styles.connectionDot}
-                                  style={{
-                                    borderColor: color,
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
-                                  }}
-                                ></div>
-                              </div>
+                              ></div>
 
                               {/* Segment info */}
                               {connectingSegment && (
