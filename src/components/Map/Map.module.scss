@@ -397,11 +397,11 @@
 }
 
 .verticalRouteSegment {
-  width: 4px;
+  width: 2px;
   height: 100%;
   margin-right: 12px;
   position: relative;
-  z-index: 5;
+  z-index: 100;
 }
 
 .connectionDot {
@@ -411,6 +411,7 @@
   background-color: white;
   border-radius: 50%;
   left: -6px;
+  top: 0;
   border: 3px solid;
   box-shadow: 0 0 0 2px white, 0 0 8px rgba(0, 0, 0, 0.4);
   z-index: 999;
@@ -421,6 +422,34 @@
     height: 12px;
     left: -4px;
     border-width: 2px;
+  }
+}
+
+.directionArrow {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  
+  i {
+    font-size: 16px;
+    filter: drop-shadow(0 0 1px white) drop-shadow(0 0 1px white);
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    bottom: -6px;
+    width: 16px;
+    height: 16px;
+    
+    i {
+      font-size: 14px;
+    }
   }
 }
 

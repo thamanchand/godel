@@ -344,7 +344,12 @@ const Map = ({
                                 style={{
                                   backgroundColor: color,
                                 }}
-                              ></div>
+                              >
+                                {/* Add direction arrow at the bottom of the line */}
+                                <div className={styles.directionArrow}>
+                                  <i className="fa fa-arrow-down" style={{ color: color }}></i>
+                                </div>
+                              </div>
 
                               {/* Segment info */}
                               {connectingSegment && (
