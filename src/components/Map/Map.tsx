@@ -66,7 +66,7 @@ const sourceIcon = L.divIcon({
   iconSize: [36, 36],
   iconAnchor: [18, 36],
   popupAnchor: [0, -36],
-  html: '<div class="marker-pin"></div>',
+  html: '<div class="marker-pin"></div><i class="fa fa-home"></i>',
 });
 
 const destinationIcon = L.divIcon({
@@ -74,7 +74,7 @@ const destinationIcon = L.divIcon({
   iconSize: [36, 36],
   iconAnchor: [18, 36],
   popupAnchor: [0, -36],
-  html: '<div class="marker-pin"></div>',
+  html: '<div class="marker-pin"></div><i class="fa fa-flag"></i>',
 });
 
 const intermediateIcon = L.divIcon({
@@ -138,6 +138,22 @@ const Map = ({
   const [_mapReady, setMapReady] = useState(false);
   const [_mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [mapStyle, setMapStyle] = useState<keyof typeof MAP_STYLES>('light');
+
+  // Add Font Awesome for icons
+  useEffect(() => {
+    // Add Font Awesome if it's not already loaded
+    if (!document.getElementById('font-awesome-css')) {
+      const link = document.createElement('link');
+      link.id = 'font-awesome-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+      link.integrity =
+        'sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==';
+      link.crossOrigin = 'anonymous';
+      link.referrerPolicy = 'no-referrer';
+      document.head.appendChild(link);
+    }
+  }, []);
 
   const handleMapReady = (map: L.Map) => {
     setMapInstance(map);
@@ -255,7 +271,10 @@ const Map = ({
                                     ? styles.destinationSymbol
                                     : styles.intermediateSymbol
                               }`}
-                            ></span>
+                            >
+                              {isSource && <i className="fa fa-home"></i>}
+                              {isDestination && <i className="fa fa-flag"></i>}
+                            </span>
                             <span className={styles.routePointName}>{point.name}</span>
                           </div>
 

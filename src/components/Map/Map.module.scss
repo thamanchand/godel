@@ -100,17 +100,34 @@
       border-radius: 50%;
     }
   }
+  
+  :global(.fa) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    z-index: 10;
+  }
 }
 
 .sourceMarker {
   :global(.marker-pin) {
     background: #FF5733;
   }
+  
+  :global(.fa-home) {
+    color: #FF5733;
+  }
 }
 
 .destinationMarker {
   :global(.marker-pin) {
     background: #32CD32;
+  }
+  
+  :global(.fa-flag) {
+    color: #32CD32;
   }
 }
 
@@ -137,6 +154,9 @@
   margin-right: 8px;
   flex-shrink: 0;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
   &::after {
     content: '';
@@ -147,10 +167,21 @@
     position: absolute;
     border-radius: 50%;
   }
+  
+  i {
+    transform: rotate(45deg);
+    position: relative;
+    z-index: 2;
+    font-size: 10px;
+  }
 }
 
 .sourceSymbol {
   background-color: #FF5733;
+  
+  i {
+    color: #FF5733;
+  }
 }
 
 .intermediateSymbol {
@@ -159,6 +190,10 @@
 
 .destinationSymbol {
   background-color: #32CD32;
+  
+  i {
+    color: #32CD32;
+  }
 }
 
 /* Vertical route sequence in legend */
