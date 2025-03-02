@@ -94,7 +94,7 @@ const SEGMENT_COLORS = [
   '#DC143C', // Crimson
 ];
 
-// Simple MapController component
+// Map controller component to handle map events
 const MapController = ({
   onPositionChange,
   onMapReady,
@@ -152,6 +152,28 @@ const Map = ({
     setMapInstance(map);
     setMapReady(true);
   };
+
+  // Function to center the map on the route
+  const centerMapOnRoute = () => {
+    if (!_mapInstance || !route || !routePoints.length) return;
+
+    // Create a bounds object from all route points
+    const bounds = L.latLngBounds(routePoints.map((point) => [point.lat, point.lon]));
+
+    // Fit the map to these bounds with some padding
+    _mapInstance.fitBounds(bounds, {
+      padding: [50, 50],
+      maxZoom: 15,
+      animate: true,
+    });
+  };
+
+  // Center the map when route changes
+  useEffect(() => {
+    if (route && routePoints.length > 0 && _mapInstance) {
+      centerMapOnRoute();
+    }
+  }, [route, _mapInstance]);
 
   return (
     <div className={styles.mapContainer}>
@@ -361,6 +383,13 @@ const Map = ({
             {value.name}
           </button>
         ))}
+        <button
+          className={styles.mapStyleButton}
+          onClick={centerMapOnRoute}
+          title="Center map on route"
+        >
+          <i className="fa fa-crosshairs"></i> Center
+        </button>
       </div>
     </div>
   );

@@ -7,6 +7,9 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
   @media (max-width: $breakpoint-md) {
     width: 100vw;
@@ -106,6 +109,10 @@
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   
   @media (max-width: 768px) {
     padding: 6px 10px;
@@ -119,6 +126,14 @@
   &.active {
     background-color: #FF5733;
     color: white;
+  }
+  
+  i {
+    font-size: 14px;
+    
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
   }
 }
 
