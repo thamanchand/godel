@@ -232,9 +232,16 @@ const Map = ({
                 <div className={styles.legendHeader}>
                   <h4>Route Path</h4>
                   {route && (
-                    <span>
-                      <strong>Total:</strong> {route.distance} km · {route.duration} min
-                    </span>
+                    <div className={styles.routeStats}>
+                      <div className={styles.routeStat}>
+                        <i className="fa fa-road"></i>
+                        <span>{route.distance} km</span>
+                      </div>
+                      <div className={styles.routeStat}>
+                        <i className="fa fa-clock"></i>
+                        <span>{route.duration} min</span>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <div className={styles.legendItems}>
