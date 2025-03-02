@@ -19,6 +19,9 @@ interface Window {
       DirectionsService: any;
       DirectionsStatus: { OK: string };
       TravelMode: { DRIVING: string };
+      event: {
+        clearInstanceListeners: (instance: any) => void;
+      };
     };
   };
   initGooglePlacesAutocomplete: () => void;

@@ -1,3 +1,6 @@
+/* eslint-env browser */
+/* global window, setTimeout, clearTimeout */
+
 /**
  * Google Maps Service
  *
@@ -57,8 +60,10 @@ export const clearInstanceListeners = (instance: any): void => {
 
   try {
     // Check if maps.event exists before using it
-    if (maps.event) {
+    if (maps.event && typeof maps.event.clearInstanceListeners === 'function') {
       maps.event.clearInstanceListeners(instance);
+    } else {
+      console.warn('Google Maps event API not available for clearing listeners');
     }
   } catch (error) {
     console.error('Error clearing Google Maps event listeners:', error);

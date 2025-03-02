@@ -391,12 +391,7 @@ async function findOptimalRouteOrder(
 
   // Generate all permutations of intermediate points indices
   const indices = Array.from({ length: n }, (_, i) => i);
-  const permutations = generatePermutations(
-    indices,
-    distanceMatrix,
-    sourceDistances,
-    destDistances
-  );
+  const permutations = generatePermutations(indices, distanceMatrix, sourceDistances);
 
   let bestPermutation: number[] = [];
   let shortestDistance = Infinity;
@@ -434,8 +429,7 @@ async function findOptimalRouteOrder(
 function generatePermutations(
   arr: number[],
   distanceMatrix: number[][],
-  sourceDistances: number[],
-  destDistances: number[]
+  sourceDistances: number[]
 ): number[][] {
   const result: number[][] = [];
 

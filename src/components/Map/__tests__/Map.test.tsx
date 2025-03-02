@@ -40,20 +40,14 @@ describe('Map', () => {
         {
           from: { name: 'Start Point', lat: 60.1699, lon: 24.9384 },
           to: { name: 'End Point', lat: 60.18, lon: 24.95 },
-          path: [
-            [60.1699, 24.9384],
-            [60.18, 24.95],
-          ],
+          path: [[60.1699, 24.9384] as [number, number], [60.18, 24.95] as [number, number]],
           distance: 1.5,
           duration: 10,
         },
       ],
       distance: 1.5,
       duration: 10,
-      path: [
-        [60.1699, 24.9384],
-        [60.18, 24.95],
-      ],
+      path: [[60.1699, 24.9384] as [number, number], [60.18, 24.95] as [number, number]],
     };
 
     const { container } = render(<Map {...defaultProps} route={route} />);
