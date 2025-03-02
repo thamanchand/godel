@@ -236,6 +236,26 @@ const Map = ({
                   // Prevent scroll events from propagating to the map
                   e.stopPropagation();
                 }}
+                onMouseEnter={() => {
+                  // Disable map scroll zoom when mouse is over the legend
+                  if (_mapInstance) {
+                    _mapInstance.scrollWheelZoom.disable();
+                  }
+                }}
+                onMouseLeave={() => {
+                  // Re-enable map scroll zoom when mouse leaves the legend
+                  if (_mapInstance) {
+                    _mapInstance.scrollWheelZoom.enable();
+                  }
+                }}
+                onClick={(e) => {
+                  // Prevent click events from propagating to the map
+                  e.stopPropagation();
+                }}
+                onTouchStart={(e) => {
+                  // Prevent touch events from propagating to the map
+                  e.stopPropagation();
+                }}
               >
                 <div className={styles.legendHeader}>
                   <h4>Optimized Route</h4>
@@ -252,7 +272,13 @@ const Map = ({
                     </div>
                   )}
                 </div>
-                <div className={styles.legendItems}>
+                <div
+                  className={styles.legendItems}
+                  onWheel={(e) => {
+                    // Ensure the wheel event is handled by this element
+                    e.stopPropagation();
+                  }}
+                >
                   <div className={styles.verticalRouteSequence}>
                     {/* Render all route points with their vertical lines */}
                     {routePoints.map((point, pointIndex) => {

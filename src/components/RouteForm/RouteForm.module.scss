@@ -32,15 +32,26 @@
     box-shadow: none;
   }
 
+  .headerContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
   .logoContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     
     img {
       display: block;
-      margin: 0 auto;
+      margin: 0;
+      width: 40px;
+      height: 40px;
     }
   }
 
@@ -48,18 +59,18 @@
   :global(.modal) & {
     .brandName {
       font-size: $font-size-xl;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
     }
     
     h3 {
-      font-size: $font-size-lg;
+      font-size: $font-size-2xl;
       margin-bottom: 0.5rem;
     }
   }
 
   .brandName {
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     font-size: $font-size-2xl;
     font-weight: $font-weight-bold;
     text-align: center;
@@ -86,7 +97,7 @@
     overflow-y: auto;
     padding-right: 0.5rem;
     flex: 1;
-    max-height: 70vh;
+    max-height: 90vh;
     
     @media (max-width: 768px) {
       max-height: none;
@@ -147,9 +158,9 @@
   margin-bottom: 0.2rem;
   
   label {
-    font-size: $font-size-sm;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+    font-size: $font-size-lg;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
     color: $text-secondary;
   }
   
@@ -160,6 +171,7 @@
     font-size: $font-size-base;
     transition: border-color 0.2s, box-shadow 0.2s;
     background-color: $white;
+    font-size: $font-size-sm;
     
     &:focus {
       outline: none;

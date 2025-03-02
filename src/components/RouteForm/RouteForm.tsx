@@ -247,10 +247,12 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   return (
     <div className={styles.formContainer}>
       <div className={styles.form}>
-        <div className={styles.logoContainer}>
-          <img src="/logo.svg" alt="Logo" width={60} height={60} />
+        <div className={styles.headerContainer}>
+          <div className={styles.logoContainer}>
+            <img src="/logo.svg" alt="Logo" width={60} height={60} />
+          </div>
+          <h2 className={styles.brandName}>GodelAI</h2>
         </div>
-        <h2 className={styles.brandName}>GodelAI</h2>
 
         {formError && <div className={styles.errorMessage}>{formError}</div>}
 
