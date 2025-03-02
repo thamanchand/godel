@@ -59,14 +59,18 @@ const intermediateIcon = L.divIcon({
 
 // Colors for route segments
 const SEGMENT_COLORS = [
-  '#00509d',
-  '#003f88',
-  '#00296b',
-  '#fdc500',
-  '#ffd500',
-  '#ca9e00',
-  '#0070db',
-  '#e6b200',
+  '#FF5733', // Bright red-orange
+  '#33A8FF', // Bright blue
+  '#33FF57', // Bright green
+  '#FF33A8', // Bright pink
+  '#A833FF', // Bright purple
+  '#FFD700', // Gold
+  '#00FFFF', // Cyan
+  '#FF00FF', // Magenta
+  '#FF8C00', // Dark orange
+  '#8A2BE2', // Blue violet
+  '#32CD32', // Lime green
+  '#DC143C', // Crimson
 ];
 
 // Simple MapController component

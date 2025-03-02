@@ -23,7 +23,7 @@
   flex-direction: column;
   max-height: calc(100% - 40px);
   overflow: hidden;
-  border-left: 4px solid #00509d;
+  border-left: 4px solid #FF5733;
 
   .legendHeader {
     margin-bottom: 12px;
@@ -73,19 +73,19 @@
 
 .sourceMarker {
   :global(.marker-pin) {
-    background: #00509d;
+    background: #FF5733;
   }
 }
 
 .destinationMarker {
   :global(.marker-pin) {
-    background: #fdc500;
+    background: #32CD32;
   }
 }
 
 .intermediateMarker {
   :global(.marker-pin) {
-    background: #0070db;
+    background: #33A8FF;
     width: 24px;
     height: 24px;
     margin: -12px 0 0 -12px;
@@ -119,15 +119,15 @@
 }
 
 .sourceSymbol {
-  background-color: #00509d;
+  background-color: #FF5733;
 }
 
 .intermediateSymbol {
-  background-color: #0070db;
+  background-color: #33A8FF;
 }
 
 .destinationSymbol {
-  background-color: #fdc500;
+  background-color: #32CD32;
 }
 
 /* Vertical route sequence in legend */
