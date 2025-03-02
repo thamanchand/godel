@@ -7,19 +7,30 @@
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  
+  @media (max-width: 768px) {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
 }
 
 // Form
 .form {
   flex: 1;
   background-color: $background-primary;
-  box-shadow: $box-shadow-sm;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   max-height: 100%;
   max-width: 100%;
   margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    overflow: visible;
+    max-height: none;
+    box-shadow: none;
+  }
 
   .logoContainer {
     display: flex;
@@ -30,6 +41,19 @@
     img {
       display: block;
       margin: 0 auto;
+    }
+  }
+
+  // In modal, make the header smaller
+  :global(.modal) & {
+    .brandName {
+      font-size: $font-size-xl;
+      margin-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: $font-size-lg;
+      margin-bottom: 0.5rem;
     }
   }
 
@@ -62,6 +86,23 @@
     overflow-y: auto;
     padding-right: 0.5rem;
     flex: 1;
+    max-height: 70vh;
+    
+    @media (max-width: 768px) {
+      max-height: none;
+      overflow: visible;
+      padding-right: 0;
+    }
+    
+    // In modal, make the form more compact
+    :global(.modal) & {
+      max-height: 60vh;
+      gap: 0.75rem;
+      
+      @media (max-width: 768px) {
+        max-height: 50vh;
+      }
+    }
     
     &::-webkit-scrollbar {
       width: 8px;

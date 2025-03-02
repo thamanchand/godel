@@ -433,13 +433,55 @@ function generatePermutations(
 ): number[][] {
   const result: number[][] = [];
 
-  // For larger sets, limit the number of permutations to avoid performance issues
-  if (arr.length > 8) {
-    console.warn(
-      'Too many intermediate points for exact solution, using nearest neighbor heuristic'
-    );
+  // For very large sets, we need to use heuristics to avoid factorial explosion
+  // Factorial growth becomes impractical beyond certain thresholds:
+  // 10! = 3,628,800 permutations, 15! = 1.3 trillion permutations
+
+  if (arr.length > 12) {
+    console.log(`Optimizing route with ${arr.length} points using advanced heuristic algorithms`);
+
+    // For larger sets, use multiple heuristic approaches and take the best result
+    const results = [];
+
+    // 1. Nearest neighbor starting from source
+    results.push(nearestNeighborTSP(arr, distanceMatrix, sourceDistances));
+
+    // 2. Nearest neighbor with different starting points (sample a few starting points)
+    const sampleSize = Math.min(5, arr.length);
+    const samples = [];
+    for (let i = 0; i < sampleSize; i++) {
+      samples.push(Math.floor(Math.random() * arr.length));
+    }
+
+    for (const startIdx of samples) {
+      const startingArr = [...arr];
+      // Move the starting point to the beginning
+      const startPoint = startingArr.splice(startIdx, 1)[0];
+      startingArr.unshift(startPoint);
+      results.push(nearestNeighborTSP(startingArr, distanceMatrix, sourceDistances));
+    }
+
+    // 3. Find the best result from all heuristics
+    let bestRoute = results[0];
+    let shortestDistance = calculateRouteDistance(bestRoute, distanceMatrix, sourceDistances);
+
+    for (let i = 1; i < results.length; i++) {
+      const distance = calculateRouteDistance(results[i], distanceMatrix, sourceDistances);
+      if (distance < shortestDistance) {
+        shortestDistance = distance;
+        bestRoute = results[i];
+      }
+    }
+
+    return [bestRoute];
+  } else if (arr.length > 8) {
+    // For medium-sized sets (9-12 points), use a simpler heuristic approach
+    console.log(`Optimizing route with ${arr.length} points using nearest neighbor heuristic`);
     return [nearestNeighborTSP(arr, distanceMatrix, sourceDistances)];
   }
+
+  // For small sets (≤ 8 points), calculate all permutations for optimal solution
+  console.log(`Calculating optimal route with ${arr.length} points using exact algorithm`);
 
   const permute = (arr: number[], m: number[] = []) => {
     if (arr.length === 0) {
@@ -455,6 +497,22 @@ function generatePermutations(
 
   permute(arr);
   return result;
+}
+
+// Helper function to calculate the total distance of a route
+function calculateRouteDistance(
+  route: number[],
+  distanceMatrix: number[][],
+  sourceDistances: number[]
+): number {
+  let totalDistance = sourceDistances[route[0]]; // Distance from source to first point
+
+  // Add distances between intermediate points
+  for (let i = 0; i < route.length - 1; i++) {
+    totalDistance += distanceMatrix[route[i]][route[i + 1]];
+  }
+
+  return totalDistance;
 }
 
 // Nearest neighbor heuristic for TSP (for when we have too many points)

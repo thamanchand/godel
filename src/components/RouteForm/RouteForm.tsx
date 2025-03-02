@@ -298,9 +298,9 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
             type="button"
             className={styles.addButton}
             onClick={handleAddIntermediatePoint}
-            disabled={isCalculating || intermediatePoints.length >= 5}
+            disabled={isCalculating}
           >
-            Add Intermediate Point
+            Add next stop
           </button>
 
           <div className={styles.inputGroup}>

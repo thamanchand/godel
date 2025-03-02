@@ -166,10 +166,11 @@ const Map = ({
       <MapContainer
         center={position}
         zoom={12}
-        style={{ height: '100%', width: '100%' }}
+        style={{ height: '100%', width: '100%', maxWidth: '100vw' }}
         scrollWheelZoom={true}
         zoomControl={false}
         attributionControl={false}
+        className={styles.leafletContainer}
       >
         <TileLayer url={MAP_STYLES[mapStyle].url} attribution={MAP_STYLES[mapStyle].attribution} />
 
