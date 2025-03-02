@@ -53,10 +53,13 @@ export const clearInstanceListeners = (instance: any): void => {
   if (!instance) return;
 
   const maps = getGoogleMaps();
-  if (!maps || !maps.event) return;
+  if (!maps) return;
 
   try {
-    maps.event.clearInstanceListeners(instance);
+    // Check if maps.event exists before using it
+    if (maps.event) {
+      maps.event.clearInstanceListeners(instance);
+    }
   } catch (error) {
     console.error('Error clearing Google Maps event listeners:', error);
   }

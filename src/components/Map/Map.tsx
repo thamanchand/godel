@@ -17,13 +17,7 @@ import { Route } from '../../services/api/routeService';
 
 import styles from './Map.module.scss';
 
-// TypeScript declarations for browser globals
-declare global {
-  interface Window {
-    google: any;
-    ResizeObserver: typeof ResizeObserver;
-  }
-}
+// No need to redeclare Window interface as it's already defined in env.d.ts
 
 interface MapProps {
   position: [number, number];

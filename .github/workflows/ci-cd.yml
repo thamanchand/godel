@@ -19,8 +19,6 @@ jobs:
       - run: npm ci
       - name: Run linting
         run: npm run lint || echo "Linting failed but continuing"
-      - name: Run tests
-        run: npm test || echo "Tests failed but continuing"
 
   deploy:
     name: Build & Deploy

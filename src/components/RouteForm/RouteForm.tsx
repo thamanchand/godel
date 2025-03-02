@@ -11,27 +11,14 @@ import styles from './RouteForm.module.scss';
 
 interface RouteFormProps {
   onCalculateRoute: (source: string, intermediatePoints: string[], destination: string) => void;
-  isCalculating: boolean;
+  isCalculating?: boolean;
   route?: any; // Add route prop
 }
-
-// Example locations to help users get started - using real locations for better results
-const EXAMPLE_LOCATIONS = [
-  'Helsinki Central Station, Finland',
-  'Helsinki Airport, Finland',
-  'Kamppi Center, Helsinki',
-  'University of Helsinki',
-  'Olympic Stadium, Helsinki',
-  'Suomenlinna, Helsinki',
-  'Seurasaari, Helsinki',
-  'Linnanmäki Amusement Park, Helsinki',
-];
 
 const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }) => {
   const [source, setSource] = useState<string>('');
   const [destination, setDestination] = useState<string>('');
   const [intermediatePoints, setIntermediatePoints] = useState<string[]>([]);
-  const [showExamples] = useState<boolean>(true); // Show examples by default
   const [formError, setFormError] = useState<string | null>(null);
   const [googleLoaded, setGoogleLoaded] = useState<boolean>(false);
 

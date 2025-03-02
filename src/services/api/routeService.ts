@@ -444,7 +444,7 @@ function generatePermutations(
     console.warn(
       'Too many intermediate points for exact solution, using nearest neighbor heuristic'
     );
-    return [nearestNeighborTSP(arr, distanceMatrix, sourceDistances, destDistances)];
+    return [nearestNeighborTSP(arr, distanceMatrix, sourceDistances)];
   }
 
   const permute = (arr: number[], m: number[] = []) => {
@@ -467,8 +467,7 @@ function generatePermutations(
 function nearestNeighborTSP(
   indices: number[],
   distanceMatrix: number[][],
-  sourceDistances: number[],
-  destDistances: number[]
+  sourceDistances: number[]
 ): number[] {
   if (indices.length <= 1) return indices;
 

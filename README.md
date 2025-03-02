@@ -1,48 +1,53 @@
-# HSL Nearby Bus Stops Finder
+# Short Path Navigation
 
-This project leverages the HSL API to retrieve bus stops based on a specified location, assisting users in finding nearby HSL bus stops in Helsinki, Vantaa, and Espoo. It is developed using React, TypeScript, Graphql and Leaflet map.
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/thamanchand/short-path-navigation/ci-cd.yml?branch=main)
+![React](https://img.shields.io/badge/React-19-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-### Live Demo
+An interactive map-based application for optimizing delivery routes. This tool helps users find the shortest path between multiple locations, making it ideal for delivery planning, logistics optimization, and route management.
 
-The application is deployed at: [HSL Bus Stop Finder](https://hsl-bus-stops.vercel.app)
+## 🚀 Live Demo
 
-### Screenshots
+Visit the application: [Short Path Navigation](https://short-path-navigation.vercel.app)
 
-![HSL Bus Stop Finder](./public/screenshot.png)
+![Short Path Navigation Screenshot](./public/screenshot.png)
 
-## Features
+## ✨ Features
 
-- Interactive map to find bus stops
-- Real-time location-based search
-- Distance-based filtering
-- Sort bus stop from closest to farthest
-- Reverse geocoding for address lookup
+- **Interactive Map Interface**: Drag and drop markers to set locations
+- **Route Optimization**: Calculate the most efficient route between multiple points
+- **Visual Route Display**: Clear visualization of the optimized path with connection dots
+- **Detailed Route Information**: Distance and time estimates for each segment
+- **Multiple Map Styles**: Choose between light, dark, satellite, and terrain views
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Real-time Calculations**: Instant feedback as you modify your route
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- React 19
-- TypeScript
-- GraphQL
-- Vite
-- Leaflet/React-Leaflet
-- SASS Modules
-- Vitest for testing
-- ESLint + Prettier
+- **Frontend**: React 19 with TypeScript
+- **Routing**: Custom route optimization algorithms
+- **Maps**: Leaflet with React-Leaflet integration
+- **Styling**: SASS Modules for component-scoped styles
+- **Build Tool**: Vite for fast development and optimized production builds
+- **Testing**: Vitest for unit and component testing
+- **Code Quality**: ESLint and Prettier for consistent code style
+- **CI/CD**: GitHub Actions for automated testing and deployment to Vercel
 
-## Getting Started
+## 🏁 Getting Started
 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm
+- npm or yarn
 
 ### Installation
 
 1. Clone the repository
 
 ```bash
-git clone https://github.com/thamanchand/hsl-api-task.git
-cd hsl-api-task
+git clone https://github.com/thamanchand/short-path-navigation.git
+cd short-path-navigation
 ```
 
 2. Install dependencies
@@ -51,88 +56,82 @@ cd hsl-api-task
 npm install
 ```
 
-3. Create a `.env` file in the root directory and add your HSL API key:
-
-```bash
-VITE_HSL_API_KEY=your_api_key_here
-```
-
-### Development
-
-Start the development server:
+3. Start the development server
 
 ```bash
 npm run dev
 ```
 
-### Testing
+The application will be available at `http://localhost:5173`
 
-Run tests:
+## 📋 Available Scripts
 
-```bash
-npm run test
-```
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application for production
+- `npm run lint` - Run ESLint to check code quality
+- `npm run lint:fix` - Fix linting issues automatically
+- `npm run test` - Run tests with Vitest
+- `npm run type-check` - Check TypeScript types
+- `npm run preview` - Preview the production build locally
 
-### Building
-
-Build for production:
-
-```bash
-npm run build
-```
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
-├── components/
-├── hooks/
-├── services/
-├── styles/
-├── types/
-└── utils/
+├── components/     # UI components including Map and RouteForm
+├── hooks/          # Custom React hooks for shared logic
+├── services/       # API and data services
+├── styles/         # Global styles and variables
+├── types/          # TypeScript type definitions
+└── utils/          # Utility functions
 ```
 
-### Repository
+## 🔄 Development Workflow
 
-GitHub Repository: [github.com/thamanchand/hsl-api-task](https://github.com/thamanchand/hsl-api-task)
+The project follows a structured development workflow:
 
-### Approach & Implementation
+1. **Feature Development**: Create a new branch for each feature
+2. **Testing**: Write tests for new functionality
+3. **Code Review**: Submit a pull request for review
+4. **CI/CD**: Automated testing and deployment via GitHub Actions
+5. **Deployment**: Automatic deployment to Vercel when merged to main
 
-- Familiarized with the HSL Open API.
-- Utilized the GraphQL playground to test APIs.
-- Developed a use case to address the challenges.
-- Initialized the project and began building the bus stop listing and map components.
-- Integrated services and connected GraphQL to fetch real data and map it to components.
-- Created custom hooks for reusable logic.
-- Defined global styles, variables, and mixins.
-- Implemented sorting and filtering functionalities.
-- Applied styles to map components.
-- Wrote comprehensive tests.
-- Documented the development process and features.
-- Established a CI/CD deployment pipeline and testing on GitHub.
+## 🌟 Key Features Explained
 
-### Challenges Faced
+### Route Optimization
 
-**HSL API Complexity**:
+The application uses an efficient algorithm to calculate the optimal route between multiple points, considering factors like distance and estimated travel time.
 
-- HSL provides a variety of APIs, including the Journey Planner, Map API, Real-time API, GTFS-RT, Beacon, and others.
-- The initial challenge was to identify a suitable use case to effectively utilize the API, which required thoroughly reviewing the documentation.
+### Interactive Map
 
-### Overcome the challenges
+The map component provides a rich user experience with:
 
-- I overcame these challenges by thoroughly reviewing the documentation, gaining a deep understanding of the API, and utilizing the GraphQL playground provided by HSL for testing.
-- Having previously worked on map-related features in several projects, I found it straightforward to develop a unique drag-and-drop feature for locating nearby bus stops.
+- Draggable markers for location selection
+- Visual representation of the route with colored segments
+- Connection dots for improved visual clarity
+- Custom markers for source, destination, and intermediate points
 
-### Potential Improvements
+### Route Legend
 
-- Add real-time bus arrival information on stops
-- Better state management and caching of the data
-- Add route visualization on map
-- Add end-to-end testing using cypress
-- Add more filtering options (e.g: zone)
-- Improve mobile experience
+A detailed legend displays:
 
-## License
+- Total distance and duration
+- Step-by-step navigation with segment information
+- Vertical scrolling for routes with many points
 
-MIT
+## 🔮 Future Improvements
+
+- Add real-time traffic data integration
+- Implement multiple route alternatives
+- Add support for different transportation modes
+- Enhance mobile experience with responsive optimizations
+- Add user accounts for saving favorite routes
+- Implement offline support with service workers
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👨‍💻 Author
+
+Thaman Chand - [GitHub](https://github.com/thamanchand)

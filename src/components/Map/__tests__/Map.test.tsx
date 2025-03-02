@@ -8,14 +8,21 @@ vi.mock('react-leaflet', () => ({
   MapContainer: vi.fn(() => null),
   TileLayer: vi.fn(() => null),
   Marker: vi.fn(() => null),
+  Polyline: vi.fn(() => null),
+  Popup: vi.fn(() => null),
   useMapEvents: vi.fn(),
+  useMap: vi.fn(() => ({
+    getCenter: vi.fn(() => ({ lat: 60.1699, lng: 24.9384 })),
+  })),
+  ZoomControl: vi.fn(() => null),
 }));
 
 describe('Map', () => {
   const defaultProps = {
     position: [60.1699, 24.9384] as [number, number],
     onPositionChange: vi.fn(),
-    stops: [],
+    route: null,
+    isCalculating: false,
   };
 
   it('renders without crashing', () => {
@@ -23,21 +30,33 @@ describe('Map', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('renders with stops', () => {
-    const stops = [
-      {
-        gtfsId: 'HSL:1234567',
-        name: 'Test Stop',
-        code: '1234',
-        platformCode: 'A',
-        lat: 60.1699,
-        lon: 24.9384,
-        zoneId: 'A',
-        distance: 100,
-      },
-    ];
+  it('renders with route data', () => {
+    const route = {
+      points: [
+        { name: 'Start Point', lat: 60.1699, lon: 24.9384 },
+        { name: 'End Point', lat: 60.18, lon: 24.95 },
+      ],
+      segments: [
+        {
+          from: { name: 'Start Point', lat: 60.1699, lon: 24.9384 },
+          to: { name: 'End Point', lat: 60.18, lon: 24.95 },
+          path: [
+            [60.1699, 24.9384],
+            [60.18, 24.95],
+          ],
+          distance: 1.5,
+          duration: 10,
+        },
+      ],
+      distance: 1.5,
+      duration: 10,
+      path: [
+        [60.1699, 24.9384],
+        [60.18, 24.95],
+      ],
+    };
 
-    const { container } = render(<Map {...defaultProps} stops={stops} />);
+    const { container } = render(<Map {...defaultProps} route={route} />);
     expect(container).toBeInTheDocument();
   });
 });
