@@ -162,6 +162,14 @@ const Map = ({
 
   return (
     <div className={styles.mapContainer}>
+      {isCalculating && (
+        <div className={styles.mapOverlay}>
+          <div className={styles.loaderContainer}>
+            <div className={styles.spinner}></div>
+            <p className={styles.loaderText}>Calculating optimal route...</p>
+          </div>
+        </div>
+      )}
       <MapContainer
         center={position}
         zoom={12}
@@ -230,7 +238,7 @@ const Map = ({
             {routeSegments.length > 0 && (
               <div className={styles.routeLegend}>
                 <div className={styles.legendHeader}>
-                  <h4>Route Path</h4>
+                  <h4>Optimized Route</h4>
                   {route && (
                     <div className={styles.routeStats}>
                       <div className={styles.routeStat}>
