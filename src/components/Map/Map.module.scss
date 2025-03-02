@@ -136,6 +136,8 @@
   flex-direction: column;
   z-index: 1000;
   overflow: hidden;
+  pointer-events: auto;
+  touch-action: pan-y;
   
   @media (max-width: $breakpoint-md) {
     width: 90%;
@@ -192,6 +194,7 @@
     padding-right: 8px;
     flex-grow: 1;
     max-height: calc(60vh - 60px);
+    overscroll-behavior: contain;
     
     // Custom scrollbar styling
     &::-webkit-scrollbar {

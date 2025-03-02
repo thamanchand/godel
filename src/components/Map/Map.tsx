@@ -230,7 +230,13 @@ const Map = ({
 
             {/* Route legend */}
             {routeSegments.length > 0 && (
-              <div className={styles.routeLegend}>
+              <div
+                className={styles.routeLegend}
+                onWheel={(e) => {
+                  // Prevent scroll events from propagating to the map
+                  e.stopPropagation();
+                }}
+              >
                 <div className={styles.legendHeader}>
                   <h4>Optimized Route</h4>
                   {route && (
@@ -290,7 +296,17 @@ const Map = ({
                                 style={{
                                   backgroundColor: color,
                                 }}
-                              ></div>
+                              >
+                                {/* Add connection dot */}
+                                <div
+                                  className={styles.connectionDot}
+                                  style={{
+                                    borderColor: color,
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                  }}
+                                ></div>
+                              </div>
 
                               {/* Segment info */}
                               {connectingSegment && (
