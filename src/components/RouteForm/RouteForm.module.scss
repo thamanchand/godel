@@ -21,12 +21,38 @@
   max-width: 100%;
   margin: 0 auto;
 
+  .logoContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  .brandName {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    text-align: center;
+    background: linear-gradient(90deg, $royal-blue-traditional, $mikado-yellow);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+  }
+
   h3 {
     margin-top: 0;
     margin-bottom: 1rem;
     color: $text-primary;
     font-size: $font-size-xl;
     font-weight: 600;
+    text-align: center;
   }
 
   form {

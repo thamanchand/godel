@@ -25,10 +25,6 @@ const App = () => {
 
   return (
     <div className={styles.app}>
-      {/* <header className={styles.header}>
-        <h2>ShortPathNavigator</h2>
-      </header> */}
-
       <main className={styles.main}>
         {error && <div className={styles.error}>{error}</div>}
 

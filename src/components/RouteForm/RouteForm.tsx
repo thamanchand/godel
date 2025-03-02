@@ -257,26 +257,13 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
     onCalculateRoute(source, intermediatePoints, destination);
   };
 
-  const handleUseExample = (location: string, type: 'source' | 'destination' | 'intermediate') => {
-    if (type === 'source') {
-      setSource(location);
-    } else if (type === 'destination') {
-      setDestination(location);
-    } else {
-      // Add as intermediate point
-      setIntermediatePoints([...intermediatePoints, location]);
-    }
-  };
-
   return (
     <div className={styles.formContainer}>
       <div className={styles.form}>
-        <h3>Plan Your Route</h3>
-
-        <div className={styles.optimizationNote}>
-          Route will be optimized from start through all waypoints to destination for maximum
-          efficiency.
+        <div className={styles.logoContainer}>
+          <img src="/logo.svg" alt="Logo" width={60} height={60} />
         </div>
+        <h2 className={styles.brandName}>GodelAI</h2>
 
         {formError && <div className={styles.errorMessage}>{formError}</div>}
 
