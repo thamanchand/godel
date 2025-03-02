@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   background-color: variables.$bg-light;
+  overflow: hidden;
 }
 
 .header {
@@ -100,16 +101,15 @@
   grid-template-columns: 420px 1fr;
   gap: variables.$spacing-3;
   padding: variables.$spacing-3;
-  height: calc(100vh - 70px);
+  height: 100vh;
   overflow: hidden;
   max-width: 100vw;
 
   @media (max-width: variables.$breakpoint-md) {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    height: auto;
-    min-height: calc(100vh - 70px);
-    overflow: auto;
+    height: 100vh;
+    overflow: hidden;
     padding: variables.$spacing-4;
     gap: variables.$spacing-4;
   }
@@ -121,7 +121,9 @@
   box-shadow: variables.$shadow-md;
   padding: variables.$spacing-6;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   
   @media (max-width: variables.$breakpoint-md) {
     padding: variables.$spacing-4;
