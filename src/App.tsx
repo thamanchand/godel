@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
+import React from 'react';
 
 import styles from './App.module.scss';
 import Map from './components/Map/Map';
+import PWAUpdateNotification from './components/PWAUpdateNotification';
 import RouteForm from './components/RouteForm/RouteForm';
 import FloatingButton from './components/common/FloatingButton';
 import Modal from './components/common/Modal';
 import { DEFAULT_POSITION } from './constants';
 import { useRouteData } from './hooks/useRouteData';
 
-const App = () => {
+const App: React.FC = () => {
   const [mapPosition, setMapPosition] = useState<[number, number]>([
     DEFAULT_POSITION.lat,
     DEFAULT_POSITION.lng,
@@ -75,6 +77,8 @@ const App = () => {
             route={route}
           />
         </Modal>
+
+        <PWAUpdateNotification />
       </main>
     </div>
   );
