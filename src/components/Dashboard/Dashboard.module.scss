@@ -1,0 +1,99 @@
+@use "../../styles/variables" as variables;
+
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  
+  @media (max-width: variables.$breakpoint-md) {
+    overflow: visible;
+    width: 100%;
+  }
+}
+
+.main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: variables.$spacing-3;
+  height: 100vh;
+  overflow: hidden;
+  max-width: 100vw;
+  padding: variables.$spacing-4;
+
+  @media (max-width: variables.$breakpoint-md) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    padding: 0;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.sidePanel {
+  background-color: variables.$bg-white;
+  border-radius: variables.$radius-lg;
+  box-shadow: variables.$shadow-md;
+  padding: variables.$spacing-4;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  @media (max-width: variables.$breakpoint-md) {
+    padding: variables.$spacing-4;
+    height: auto;
+    max-height: none;
+  }
+}
+
+.mapContainer {
+  height: 100%;
+  overflow: hidden;
+  border-radius: variables.$radius-lg;
+  border: 1px solid variables.$border-light;
+  box-shadow: variables.$shadow-md;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  
+  @media (max-width: variables.$breakpoint-md) {
+    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    border: none;
+    margin-bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  @media (max-width: 480px) {
+    height: 100vh;
+    min-height: 100vh;
+    width: 100vw;
+  }
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: variables.$spacing-3 variables.$spacing-4;
+  border-radius: variables.$radius-md;
+  margin-bottom: variables.$spacing-4;
+  font-size: variables.$font-size-sm;
+  border-left: 4px solid #ef4444;
+  grid-column: 1 / -1;
+}
+
+.desktopOnly {
+  @media (max-width: variables.$breakpoint-md) {
+    display: none;
+  }
+} 

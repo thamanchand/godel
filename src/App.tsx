@@ -1,86 +1,92 @@
-import { useEffect, useState } from 'react';
-import 'leaflet/dist/leaflet.css';
-import React from 'react';
+import { User } from '@supabase/supabase-js';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-import styles from './App.module.scss';
-import Map from './components/Map/Map';
-import PWAUpdateNotification from './components/PWAUpdateNotification';
-import RouteForm from './components/RouteForm/RouteForm';
-import FloatingButton from './components/common/FloatingButton';
+import 'leaflet/dist/leaflet.css';
+
+import Dashboard from './components/Dashboard/Dashboard';
+import LandingPage from './components/LandingPage/LandingPage';
+import AuthModal from './components/auth/AuthModal';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import Modal from './components/common/Modal';
-import { DEFAULT_POSITION } from './constants';
-import { useRouteData } from './hooks/useRouteData';
+import { supabase, onAuthStateChange } from './lib/supabase';
 
 const App: React.FC = () => {
-  const [mapPosition, setMapPosition] = useState<[number, number]>([
-    DEFAULT_POSITION.lat,
-    DEFAULT_POSITION.lng,
-  ]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const { route, isCalculating, error, calculateRoute } = useRouteData();
+  const [user, setUser] = useState<User | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
-    // If we have a route with points, set the map position to the first point (source)
-    if (route && route.points.length > 0) {
-      const source = route.points[0];
-      setMapPosition([source.lat, source.lon]);
-    }
-  }, [route]);
+    console.log('Setting up auth state listener');
 
-  // Close modal when route calculation starts
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user ? 'User found' : 'No user');
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = onAuthStateChange((user) => {
+      console.log('Auth state changed:', user ? 'User found' : 'No user');
+      setUser(user);
+    });
+
+    return () => {
+      console.log('Cleaning up auth subscription');
+      subscription.unsubscribe();
+    };
+  }, []);
+
   useEffect(() => {
-    if (isCalculating) {
-      setIsModalOpen(false);
-    }
-  }, [isCalculating]);
+    console.log('[Route] Current path:', location.pathname);
+    console.log('[Route] User state:', user);
+  }, [location.pathname, user]);
 
-  const handleCalculateRoute = (...args: Parameters<typeof calculateRoute>) => {
-    calculateRoute(...args);
-    // Modal will be closed by the effect above when isCalculating changes
-  };
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <>
+        <LandingPage user={null} />
+        <Modal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          title="Authentication"
+        >
+          <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+        </Modal>
+      </>
+    );
+  }
+
+  console.log('[App] Rendering routes. Path:', location.pathname, 'User:', user);
 
   return (
-    <div className={styles.app}>
-      <main className={styles.main}>
-        {error && <div className={styles.error}>{error}</div>}
-
-        {/* Desktop view - side panel always visible */}
-        <div className={`${styles.sidePanel} ${styles.desktopOnly}`}>
-          <RouteForm
-            onCalculateRoute={calculateRoute}
-            isCalculating={isCalculating}
-            route={route}
-          />
-        </div>
-
-        <div className={styles.mapContainer}>
-          <Map
-            position={mapPosition}
-            onPositionChange={setMapPosition}
-            route={route}
-            isCalculating={isCalculating}
-          />
-        </div>
-
-        {/* Mobile view - floating button and modal */}
-        <FloatingButton onClick={() => setIsModalOpen(true)} label="Optimize Route" />
-
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Optimize Delivery Route"
-        >
-          <RouteForm
-            onCalculateRoute={handleCalculateRoute}
-            isCalculating={isCalculating}
-            route={route}
-          />
-        </Modal>
-
-        <PWAUpdateNotification />
-      </main>
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={user ? <Navigate to="/dashboard" replace /> : <LandingPage user={user} />}
+      />
+      <Route
+        path="/dashboard/*"
+        element={
+          <ProtectedRoute user={user}>
+            <Dashboard user={user!} />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 
