@@ -6,14 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GodelAI: Delivery Route Optimizer</title>
     
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#4a90e2" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-title" content="GodelAI" />
-    <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
-    
     <!-- Load Google Maps API with callback -->
     <script>
       // Define callback function
@@ -21,19 +13,6 @@
         // Dispatch an event when Google Maps API is loaded
         window.dispatchEvent(new Event('google-maps-loaded'));
         console.log('Google Maps API loaded successfully');
-      }
-
-      // Register Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/dist/sw.js')
-            .then((registration) => {
-              console.log('ServiceWorker registration successful:', registration.scope);
-            })
-            .catch((error) => {
-              console.log('ServiceWorker registration failed:', error);
-            });
-        });
       }
     </script>
     <script async defer 

@@ -253,7 +253,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating, 
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Source Input */}
-            <div className="space-y-2">
+      <div className="space-y-2">
               <label htmlFor="source" className="block text-sm font-semibold text-gray-700">
                 Starting Point
               </label>
@@ -348,7 +348,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating, 
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
                 disabled={!googleLoaded}
               />
-            </div>
+                  </div>
 
             {/* Error Message */}
             {formError && (
@@ -396,7 +396,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating, 
               )}
             </button>
           </form>
-        </div>
+            </div>
       </div>
     </div>
   );
