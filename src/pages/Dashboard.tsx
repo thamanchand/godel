@@ -1,14 +1,13 @@
 import { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react';
 
+import FloatingButton from '../components/common/FloatingButton';
+import Modal from '../components/common/Modal';
+import Map from '../components/map/Map';
+import RouteForm from '../components/route/RouteForm';
 import { DEFAULT_POSITION } from '../constants';
 import { useRouteData } from '../hooks/useRouteData';
 import { supabase } from '../lib/supabaseClient';
-import Map from '../components/map/Map';
-import RouteForm from '../components/route/RouteForm';
-import FloatingButton from '../components/common/FloatingButton';
-import Modal from '../components/common/Modal';
-import Header from '../components/layout/Header';
 
 interface DashboardProps {
   user: User;
@@ -46,7 +45,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center">
-          <img src="/logo.svg" alt="Logo" className="h-8 w-auto" />
+          <img src="/src/assets/logo.svg" alt="Logo" className="h-10 w-auto" />
           <span className="ml-2 text-2xl font-bold inline-block bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 text-transparent bg-clip-text">
             GoDelAI
           </span>
