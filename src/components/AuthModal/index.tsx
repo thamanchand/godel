@@ -3,7 +3,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared';
 import React from 'react';
 
 import { supabase } from '../../lib/supabaseClient';
-import Modal from '../common/Modal';
+import Modal from '../Modal';
 
 interface AuthModalProps {
   isOpen: boolean;

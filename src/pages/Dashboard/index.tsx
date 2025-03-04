@@ -1,10 +1,10 @@
 import { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react';
 
-import Map from '../../components/Map/Map'; // Corrected the import path for Map
-import FloatingButton from '../../components/common/FloatingButton';
-import Modal from '../../components/common/Modal';
-import RouteForm from '../../components/route/RouteForm';
+import FloatingButton from '../../components/FloatingButton';
+import Map from '../../components/Map';
+import Modal from '../../components/Modal';
+import RouteForm from '../../components/RouteForm';
 import { DEFAULT_POSITION } from '../../constants';
 import { useRouteData } from '../../hooks/useRouteData';
 import { supabase } from '../../lib/supabaseClient';

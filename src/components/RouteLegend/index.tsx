@@ -1,8 +1,9 @@
 import React from 'react';
+
 import { Route } from '../../services/api/routeService';
 
 interface RouteLegendProps {
-  route: Route;
+  route?: Route | null;
 }
 
 const SEGMENT_COLORS = [
@@ -21,6 +22,10 @@ const SEGMENT_COLORS = [
 ];
 
 const RouteLegend: React.FC<RouteLegendProps> = ({ route }) => {
+  if (!route) {
+    return null;
+  }
+
   const { points, segments } = route;
 
   return (
@@ -29,7 +34,6 @@ const RouteLegend: React.FC<RouteLegendProps> = ({ route }) => {
       <div className="space-y-2">
         {points.map((point, index) => {
           const isSource = index === 0;
-          const isDestination = index === points.length - 1;
           const color = SEGMENT_COLORS[index % SEGMENT_COLORS.length];
 
           return (

@@ -6,8 +6,8 @@ import 'leaflet/dist/leaflet.css';
 import './styles/mobile-overrides.css';
 
 import AuthModal from './components/AuthModal';
+import Modal from './components/Modal';
 import ProtectedRoute from './components/ProtectedRoute';
-import Modal from './components/common/Modal';
 import { supabase } from './lib/supabase';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';

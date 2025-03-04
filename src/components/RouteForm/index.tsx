@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+import { Route } from '../../services/api/routeService';
 import {
   isGoogleMapsLoaded,
   createAutocomplete,
@@ -10,10 +11,10 @@ import {
 interface RouteFormProps {
   onCalculateRoute: (source: string, intermediatePoints: string[], destination: string) => void;
   isCalculating?: boolean;
-  route?: any; // Add route prop
+  route?: Route | null;
 }
 
-const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }) => {
+const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating, route }) => {
   const [source, setSource] = useState<string>('');
   const [destination, setDestination] = useState<string>('');
   const [intermediatePoints, setIntermediatePoints] = useState<string[]>([]);
