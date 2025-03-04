@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 
 import { DEFAULT_POSITION } from '../../constants';
 import { useRouteData } from '../../hooks/useRouteData';
-
-import FloatingButton from '../common/FloatingButton';
+import { supabase } from '../../lib/supabaseClient';
 import Map from '../Map/Map';
-import Modal from '../common/Modal';
 import RouteForm from '../RouteForm/RouteForm';
+import FloatingButton from '../common/FloatingButton';
+import Modal from '../common/Modal';
 
 interface DashboardProps {
   user: User;
@@ -42,6 +42,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center">
+          <img src="/logo.svg" alt="Logo" className="h-8 w-auto" />
+          <span className="ml-2 text-2xl font-bold inline-block bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 text-transparent bg-clip-text">
+            GoDelAI
+          </span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <span className="text-sm text-gray-700">{user.email}</span>
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="text-sm text-gray-600 hover:text-gray-900 flex items-center space-x-1"
+          >
+            <i className="fa fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </header>
+
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-4 p-4 h-screen overflow-hidden max-w-screen">
         {error && (
           <div className="col-span-full bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-4 border-l-4 border-red-500">

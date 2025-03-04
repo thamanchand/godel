@@ -245,7 +245,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto">
-        <div className="space-y-6">
+        <div className="space-y-6 space-x-3">
           <div className="flex flex-col space-y-2">
             <p className="text-gray-900 font-bold text-xl">Find optimal route</p>
           </div>
