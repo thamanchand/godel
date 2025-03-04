@@ -3,18 +3,16 @@ import { useEffect, useState } from 'react';
 import {
   MapContainer,
   TileLayer,
-  Marker,
   Polyline,
-  Popup,
   useMapEvents,
   useMap,
   ZoomControl,
+  Marker,
+  Popup,
 } from 'react-leaflet';
 
 import { DEFAULT_POSITION } from '../../constants';
 import { Route } from '../../services/api/routeService';
-
-import styles from './Map.module.scss';
 
 // No need to redeclare Window interface as it's already defined in env.d.ts
 
@@ -52,31 +50,6 @@ const MAP_STYLES = {
       'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
 };
-
-// Custom marker icons
-const sourceIcon = L.divIcon({
-  className: `${styles.customMarker} ${styles.sourceMarker}`,
-  iconSize: [36, 36],
-  iconAnchor: [18, 36],
-  popupAnchor: [0, -36],
-  html: '<div class="marker-pin"></div><i class="fa fa-home"></i>',
-});
-
-const destinationIcon = L.divIcon({
-  className: `${styles.customMarker} ${styles.destinationMarker}`,
-  iconSize: [36, 36],
-  iconAnchor: [18, 36],
-  popupAnchor: [0, -36],
-  html: '<div class="marker-pin"></div><i class="fa fa-flag"></i>',
-});
-
-const intermediateIcon = L.divIcon({
-  className: `${styles.customMarker} ${styles.intermediateMarker}`,
-  iconSize: [28, 28],
-  iconAnchor: [14, 14],
-  popupAnchor: [0, -14],
-  html: '<div class="marker-pin"></div>',
-});
 
 // Colors for route segments
 const SEGMENT_COLORS = [
@@ -176,12 +149,12 @@ const Map = ({
   }, [route, _mapInstance]);
 
   return (
-    <div className={styles.mapContainer}>
+    <div className="w-full h-full">
       {isCalculating && (
-        <div className={styles.mapOverlay}>
-          <div className={styles.loaderContainer}>
-            <div className={styles.spinner}></div>
-            <p className={styles.loaderText}>Calculating optimal route...</p>
+        <div className="absolute inset-0 bg-white bg-opacity-75 z-[2000] flex items-center justify-center">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-lg font-medium text-gray-900">Calculating optimal route...</p>
           </div>
         </div>
       )}
@@ -192,7 +165,7 @@ const Map = ({
         scrollWheelZoom={true}
         zoomControl={false}
         attributionControl={false}
-        className={styles.leafletContainer}
+        className="leafletContainer"
       >
         <TileLayer url={MAP_STYLES[mapStyle].url} attribution={MAP_STYLES[mapStyle].attribution} />
 
@@ -230,17 +203,39 @@ const Map = ({
               );
             })}
 
-            {/* Route points */}
+            {/* Route points with markers */}
             {routePoints.map((point, index) => {
               const isSource = index === 0;
               const isDestination = index === routePoints.length - 1;
+              const color = SEGMENT_COLORS[index % SEGMENT_COLORS.length];
 
-              let icon = intermediateIcon;
-              if (isSource) icon = sourceIcon;
-              if (isDestination) icon = destinationIcon;
+              // Create custom marker icons
+              const markerIcon = L.divIcon({
+                className: 'customMarker',
+                iconSize: isSource || isDestination ? [24, 24] : [20, 20],
+                iconAnchor: isSource || isDestination ? [12, 12] : [10, 10],
+                popupAnchor: isSource || isDestination ? [0, -12] : [0, -10],
+                html: `
+                  <div class="marker-pin" style="
+                    width: 100%;
+                    height: 100%;
+                    background-color: ${color};
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: ${isSource || isDestination ? '14px' : '12px'};
+                  ">
+                    ${isSource ? '<i class="fa fa-home"></i>' : ''}
+                    ${isDestination ? '<i class="fa fa-flag"></i>' : ''}
+                    ${!isSource && !isDestination ? '<i class="fa fa-circle"></i>' : ''}
+                  </div>
+                `,
+              });
 
               return (
-                <Marker key={`point-${index}`} position={[point.lat, point.lon]} icon={icon}>
+                <Marker key={`point-${index}`} position={[point.lat, point.lon]} icon={markerIcon}>
                   <Popup>
                     <div>
                       <strong>{point.name}</strong>
@@ -253,7 +248,7 @@ const Map = ({
             {/* Route legend */}
             {routeSegments.length > 0 && (
               <div
-                className={styles.routeLegend}
+                className="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-sm w-full z-[1000] overflow-y-auto max-h-[80vh]"
                 onWheel={(e) => {
                   // Prevent scroll events from propagating to the map
                   e.stopPropagation();
@@ -279,29 +274,25 @@ const Map = ({
                   e.stopPropagation();
                 }}
               >
-                <div className={styles.legendHeader}>
-                  <h4>Optimized Route</h4>
-                  {route && (
-                    <div className={styles.routeStats}>
-                      <div className={styles.routeStat}>
-                        <i className="fa fa-road"></i>
-                        <span>{route.distance} km</span>
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-semibold text-gray-900">Optimized Route</h4>
+                    {route && (
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-1">
+                          <i className="fa fa-road text-gray-500"></i>
+                          <span className="text-sm text-gray-700">{route.distance} km</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <i className="fa fa-clock text-gray-500"></i>
+                          <span className="text-sm text-gray-700">{route.duration} min</span>
+                        </div>
                       </div>
-                      <div className={styles.routeStat}>
-                        <i className="fa fa-clock"></i>
-                        <span>{route.duration} min</span>
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-                <div
-                  className={styles.legendItems}
-                  onWheel={(e) => {
-                    // Ensure the wheel event is handled by this element
-                    e.stopPropagation();
-                  }}
-                >
-                  <div className={styles.verticalRouteSequence}>
+                <div className="mt-4 space-y-2">
+                  <div className="flex flex-col space-y-2">
                     {/* Render all route points with their vertical lines */}
                     {routePoints.map((point, pointIndex) => {
                       const isSource = pointIndex === 0;
@@ -320,52 +311,72 @@ const Map = ({
                         : null;
 
                       return (
-                        <div
-                          key={`route-point-${pointIndex}`}
-                          className={styles.verticalRoutePoint}
-                        >
-                          {/* Point marker */}
-                          <div className={styles.routePointMarker}>
-                            {isSource && <i className={`fa fa-home ${styles.sourceIcon}`}></i>}
-                            {isDestination && (
-                              <i className={`fa fa-flag ${styles.destinationIcon}`}></i>
-                            )}
-                            {!isSource && !isDestination && (
-                              <i className={`fa fa-circle ${styles.intermediateIcon}`}></i>
-                            )}
-                            <span className={styles.routePointName}>{point.name}</span>
-                          </div>
-
-                          {/* Vertical line with connection dots */}
+                        <div key={`route-point-${pointIndex}`} className="flex items-start">
+                          {/* Connection circle and vertical line on the left */}
                           {!isDestination && (
-                            <div className={styles.verticalRouteLine}>
+                            <div className="flex flex-col items-center mr-3">
+                              {isSource ? (
+                                <div
+                                  className="w-6 h-6 rounded-full flex items-center justify-center"
+                                  style={{ backgroundColor: color }}
+                                >
+                                  <i className="fa fa-home text-white text-sm"></i>
+                                </div>
+                              ) : (
+                                <div
+                                  className="w-6 h-6 rounded-full flex items-center justify-center"
+                                  style={{ backgroundColor: color }}
+                                >
+                                  <i className="fa fa-circle text-white text-sm"></i>
+                                </div>
+                              )}
                               <div
-                                className={styles.verticalRouteSegment}
+                                className="w-0.5 h-8 relative"
                                 style={{
                                   backgroundColor: color,
                                 }}
                               >
                                 {/* Add direction arrow at the bottom of the line */}
-                                <div className={styles.directionArrow}>
-                                  <i className="fa fa-arrow-down" style={{ color: color }}></i>
+                                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                                  <i
+                                    className="fa fa-arrow-down text-sm"
+                                    style={{ color: color }}
+                                  ></i>
                                 </div>
                               </div>
-
-                              {/* Segment info */}
-                              {connectingSegment && (
-                                <div className={styles.segmentInfo}>
-                                  <div className={styles.segmentStat}>
-                                    <i className="fa fa-road"></i>
-                                    <span>{connectingSegment.distance.toFixed(1)} km</span>
-                                  </div>
-                                  <div className={styles.segmentStat}>
-                                    <i className="fa fa-clock"></i>
-                                    <span>{Math.round(connectingSegment.duration)} min</span>
-                                  </div>
-                                </div>
-                              )}
                             </div>
                           )}
+
+                          {/* Point marker and info on the right */}
+                          <div className="flex flex-col flex-1">
+                            <div className="flex items-center space-x-2">
+                              {isDestination && (
+                                <div
+                                  className="w-6 h-6 rounded-full flex items-center justify-center"
+                                  style={{ backgroundColor: color }}
+                                >
+                                  <i className="fa fa-flag text-white text-sm"></i>
+                                </div>
+                              )}
+                              <span className="text-sm font-medium text-gray-900">
+                                {point.name}
+                              </span>
+                            </div>
+
+                            {/* Segment info below the address */}
+                            {connectingSegment && (
+                              <div className="flex items-center space-x-4 text-xs text-gray-500 mt-1">
+                                <div className="flex items-center space-x-1">
+                                  <i className="fa fa-road"></i>
+                                  <span>{connectingSegment.distance.toFixed(1)} km</span>
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                  <i className="fa fa-clock"></i>
+                                  <span>{Math.round(connectingSegment.duration)} min</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       );
                     })}
@@ -377,23 +388,28 @@ const Map = ({
         )}
       </MapContainer>
 
-      {/* Map style selector */}
-      <div className={styles.mapStyleSelector}>
+      {/* Map style selector and center button */}
+      <div className="absolute top-4 left-4 flex items-center space-x-2 z-[1000]">
         {Object.entries(MAP_STYLES).map(([key, value]) => (
           <button
             key={key}
-            className={`${styles.mapStyleButton} ${mapStyle === key ? styles.active : ''}`}
+            className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              mapStyle === key
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
             onClick={() => setMapStyle(key as keyof typeof MAP_STYLES)}
           >
             {value.name}
           </button>
         ))}
         <button
-          className={styles.mapStyleButton}
+          className="px-3 py-1.5 text-sm font-medium rounded-lg bg-white text-gray-700 hover:bg-gray-100 transition-colors flex items-center space-x-1"
           onClick={centerMapOnRoute}
           title="Center map on route"
         >
-          <i className="fa fa-crosshairs"></i> Center
+          <i className="fa fa-crosshairs"></i>
+          <span>Center</span>
         </button>
       </div>
     </div>

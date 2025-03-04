@@ -1,7 +1,5 @@
 import React from 'react';
 
-import styles from './FloatingButton.module.scss';
-
 interface FloatingButtonProps {
   onClick: () => void;
   label: string;
@@ -10,9 +8,9 @@ interface FloatingButtonProps {
 
 const FloatingButton: React.FC<FloatingButtonProps> = ({ onClick, label, icon }) => {
   return (
-    <button className={styles.floatingButton} onClick={onClick}>
-      {icon && <span className={styles.icon}>{icon}</span>}
-      <span className={styles.label}>{label}</span>
+    <button className="fixed bottom-4 right-4 z-50" onClick={onClick}>
+      {icon && <span className="text-2xl">{icon}</span>}
+      <span className="text-sm">{label}</span>
     </button>
   );
 };

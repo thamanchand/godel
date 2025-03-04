@@ -247,16 +247,13 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-6">
           <div className="flex flex-col space-y-2">
-            <h2 className="text-2xl font-bold text-gray-900">Route Optimization</h2>
-            <p className="text-gray-600">
-              Enter your delivery locations to find the optimal route.
-            </p>
+            <p className="text-gray-900 font-bold text-xl">Find optimal route</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Source Input */}
             <div className="space-y-2">
-              <label htmlFor="source" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="source" className="block text-sm font-semibold text-gray-700">
                 Starting Point
               </label>
               <input
@@ -266,71 +263,78 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
                 placeholder="Enter starting location"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
                 disabled={!googleLoaded}
               />
             </div>
 
             {/* Intermediate Points */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <label className="block text-sm font-medium text-gray-700">
-                  Intermediate Stops
-                </label>
-                <button
-                  type="button"
-                  onClick={handleAddIntermediatePoint}
-                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                >
-                  <svg
-                    className="h-5 w-5 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
+              <label className="block text-sm font-semibold text-gray-700">
+                Intermediate Stops
+              </label>
+
+              <div className="space-y-2">
+                {intermediatePoints.map((point, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      ref={setIntermediateInputRef(index)}
+                      type="text"
+                      value={point}
+                      onChange={(e) => handleIntermediatePointChange(index, e.target.value)}
+                      placeholder={`Stop ${index + 1}`}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                      disabled={!googleLoaded}
                     />
-                  </svg>
-                  Add Stop
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveIntermediatePoint(index)}
+                      className="p-1.5 bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105"
+                    >
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
               </div>
 
-              {intermediatePoints.map((point, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <input
-                    ref={setIntermediateInputRef(index)}
-                    type="text"
-                    value={point}
-                    onChange={(e) => handleIntermediatePointChange(index, e.target.value)}
-                    placeholder={`Stop ${index + 1}`}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    disabled={!googleLoaded}
+              {/* Add Stop Button */}
+              <button
+                type="button"
+                onClick={handleAddIntermediatePoint}
+                className="w-full mt-2 inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              >
+                <svg
+                  className="h-4 w-4 mr-1.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
                   />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveIntermediatePoint(index)}
-                    className="p-2 text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 rounded-lg transition-colors"
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              ))}
+                </svg>
+                Add Stop
+              </button>
             </div>
 
             {/* Destination Input */}
             <div className="space-y-2">
-              <label htmlFor="destination" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="destination" className="block text-sm font-semibold text-gray-700">
                 Destination
               </label>
               <input
@@ -340,7 +344,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 placeholder="Enter destination"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
                 disabled={!googleLoaded}
               />
             </div>
@@ -359,7 +363,7 @@ const RouteForm: React.FC<RouteFormProps> = ({ onCalculateRoute, isCalculating }
               className={`w-full py-3 px-4 rounded-lg text-white font-medium transition-all duration-200 ${
                 isCalculating || !googleLoaded
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-primary-600 hover:bg-primary-700 focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
+                  : 'bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
               }`}
             >
               {isCalculating ? (

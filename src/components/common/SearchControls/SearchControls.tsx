@@ -1,7 +1,5 @@
 import { DISTANCE_FILTERS } from '../../../constants';
 
-import styles from './SearchControls.module.scss';
-
 interface SearchControlsProps {
   searchQuery: string;
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -22,19 +20,19 @@ const SearchControls = ({
   onSortOrderChange,
 }: SearchControlsProps) => {
   return (
-    <div className={styles.controls}>
+    <div className="flex items-center space-x-2">
       <input
         type="text"
         placeholder="Enter stop name to search from the list below"
         value={searchQuery}
         onChange={onSearchChange}
         onKeyPress={onKeyPress}
-        className={styles.searchInput}
+        className="searchInput"
       />
-      <div className={styles.filterGroup}>
-        <span className={styles.filterLabel}>Distance:</span>
+      <div className="filterGroup">
+        <span className="filterLabel">Distance:</span>
         <select
-          className={styles.filterSelect}
+          className="filterSelect"
           value={distanceFilter}
           onChange={(e) => onDistanceFilterChange(Number(e.target.value))}
         >
@@ -45,10 +43,10 @@ const SearchControls = ({
           ))}
         </select>
       </div>
-      <div className={styles.filterGroup}>
-        <span className={styles.filterLabel}>Sort:</span>
+      <div className="filterGroup">
+        <span className="filterLabel">Sort:</span>
         <select
-          className={styles.filterSelect}
+          className="filterSelect"
           value={sortOrder}
           onChange={(e) => onSortOrderChange(e.target.value as 'asc' | 'desc')}
         >
