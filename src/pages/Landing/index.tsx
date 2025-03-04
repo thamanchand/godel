@@ -2,8 +2,8 @@ import { User } from '@supabase/supabase-js';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import AuthModal from '../components/auth/AuthModal';
-import { supabase } from '../lib/supabaseClient';
+import AuthModal from '../../components/AuthModal';
+import { supabase } from '../../lib/supabase';
 
 interface LandingPageProps {
   user?: User | null;

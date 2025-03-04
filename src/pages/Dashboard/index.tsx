@@ -1,13 +1,13 @@
 import { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react';
 
-import FloatingButton from '../components/common/FloatingButton';
-import Modal from '../components/common/Modal';
-import Map from '../components/map/Map';
-import RouteForm from '../components/route/RouteForm';
-import { DEFAULT_POSITION } from '../constants';
-import { useRouteData } from '../hooks/useRouteData';
-import { supabase } from '../lib/supabaseClient';
+import Map from '../../components/Map/Map'; // Corrected the import path for Map
+import FloatingButton from '../../components/common/FloatingButton';
+import Modal from '../../components/common/Modal';
+import RouteForm from '../../components/route/RouteForm';
+import { DEFAULT_POSITION } from '../../constants';
+import { useRouteData } from '../../hooks/useRouteData';
+import { supabase } from '../../lib/supabaseClient';
 
 interface DashboardProps {
   user: User;

@@ -5,8 +5,8 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import './styles/mobile-overrides.css';
 
-import AuthModal from './components/auth/AuthModal';
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import AuthModal from './components/AuthModal';
+import ProtectedRoute from './components/ProtectedRoute';
 import Modal from './components/common/Modal';
 import { supabase } from './lib/supabase';
 import Dashboard from './pages/Dashboard';
