@@ -1,15 +1,16 @@
 import { User } from '@supabase/supabase-js';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 import 'leaflet/dist/leaflet.css';
+import './styles/mobile-overrides.css';
 
-import Dashboard from './components/Dashboard/Dashboard';
-import LandingPage from './components/LandingPage/LandingPage';
 import AuthModal from './components/auth/AuthModal';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Modal from './components/common/Modal';
-import { supabase, onAuthStateChange } from './lib/supabase';
+import { supabase } from './lib/supabase';
+import Dashboard from './pages/Dashboard';
+import Landing from './pages/Landing';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -30,9 +31,9 @@ const App: React.FC = () => {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = onAuthStateChange((user) => {
-      console.log('Auth state changed:', user ? 'User found' : 'No user');
-      setUser(user);
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth state changed:', session?.user ? 'User found' : 'No user');
+      setUser(session?.user ?? null);
     });
 
     return () => {
@@ -49,7 +50,7 @@ const App: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -57,12 +58,8 @@ const App: React.FC = () => {
   if (!user) {
     return (
       <>
-        <LandingPage user={null} />
-        <Modal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          title="Authentication"
-        >
+        <Landing />
+        <Modal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} title="Sign In">
           <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
         </Modal>
       </>
@@ -73,15 +70,12 @@ const App: React.FC = () => {
 
   return (
     <Routes>
+      <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Landing />} />
       <Route
-        path="/"
-        element={user ? <Navigate to="/dashboard" replace /> : <LandingPage user={user} />}
-      />
-      <Route
-        path="/dashboard/*"
+        path="/dashboard"
         element={
           <ProtectedRoute user={user}>
-            <Dashboard user={user!} />
+            <Dashboard user={user} />
           </ProtectedRoute>
         }
       />

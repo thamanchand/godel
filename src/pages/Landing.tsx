@@ -1,8 +1,8 @@
 import { User } from '@supabase/supabase-js';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthModal from '../auth/AuthModal';
-import { signOut } from '../../lib/supabase';
+import AuthModal from '../components/auth/AuthModal';
+import { supabase } from '../lib/supabaseClient';
 
 interface LandingPageProps {
   user?: User | null;
@@ -14,7 +14,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ user }) => {
 
   const handleSignOut = async () => {
     try {
-      await signOut();
+      await supabase.auth.signOut();
     } catch (error) {
       console.error('Error signing out:', error);
     }
